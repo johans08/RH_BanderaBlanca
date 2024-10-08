@@ -1,0 +1,26 @@
+﻿@model DataBase_RH_BanderaBlanca.Models.dias
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>dias</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Nombre_Dia)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nombre_Dia)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.idDias }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

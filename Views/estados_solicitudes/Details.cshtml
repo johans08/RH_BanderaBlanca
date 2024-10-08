@@ -1,0 +1,26 @@
+﻿@model DataBase_RH_BanderaBlanca.Models.estados_solicitudes
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>estados_solicitudes</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Estados_Solicitud)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Estados_Solicitud)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.idEstados_Solicitudes }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,34 @@
+﻿@model DataBase_RH_BanderaBlanca.Models.catalogo_incapacidades
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>catalogo_incapacidades</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Descripcion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Porcentaje_Deduccion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Porcentaje_Deduccion)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.idCatalogo_Incapacidad }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

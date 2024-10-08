@@ -1,0 +1,26 @@
+﻿@model DataBase_RH_BanderaBlanca.Models.catalogo_correos
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>catalogo_correos</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Tipo_Correo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Tipo_Correo)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.idCatalogo_Correo }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,26 @@
+﻿@model DataBase_RH_BanderaBlanca.Models.roles
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>roles</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Descripcion_Rol)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Descripcion_Rol)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.idRol }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,26 @@
+﻿@model DataBase_RH_BanderaBlanca.Models.catalogo_telefonicos
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>catalogo_telefonicos</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Catalogo_Telefonico)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Catalogo_Telefonico)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.idCatalogo_Telefonico }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
