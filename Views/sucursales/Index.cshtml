@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DataBase_RH_BanderaBlanca.Models.sucursales>
+﻿@model IEnumerable<DataBase_RH_BanderaBlanca.Models.Sucursal>
 
 @{
     ViewBag.Title = "Index";
@@ -12,10 +12,13 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Nombre_Sucursal)
+            @Html.DisplayNameFor(model => model.sucursales.Nombre_Sucursal)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Fecha_Creacion)
+            @Html.DisplayNameFor(model => model.telefonos.Numero_Telefonico_Sucursal)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.direcciones_Empresas.Direccion_Especifica_Sucursal)
         </th>
         <th></th>
     </tr>
@@ -23,15 +26,13 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Nombre_Sucursal)
+            @Html.DisplayFor(modelItem => item.sucursales.Nombre_Sucursal)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Fecha_Creacion)
+            @Html.DisplayFor(modelItem => item.telefonos.Numero_Telefonico_Sucursal)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Identificador_Sucursal }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Identificador_Sucursal }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Identificador_Sucursal })
+            @Html.DisplayFor(modelItem => item.direcciones_Empresas.Direccion_Especifica_Sucursal)
         </td>
     </tr>
 }

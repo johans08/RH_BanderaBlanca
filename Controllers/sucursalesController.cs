@@ -62,11 +62,15 @@ namespace RH_BanderaBlanca.Controllers
         // GET: sucursales/Create
         public ActionResult Create()
         {
+            var sucursalModel = new Sucursal(); // Inicializa el modelo Sucursal
+
             ViewBag.catalogo_telefonicos = new SelectList(db.catalogo_telefonicos.ToList(), "idCatalogo_Telefonico", "Catalogo_Telefonico");
             ViewBag.Distritos = new SelectList(db.distritos.ToList(), "idDistrito", "Nombre_Distrito");
             ViewBag.Cantones = new SelectList(db.cantones.ToList(), "idCanton", "Nombre_Canton");
             ViewBag.Provincias = new SelectList(db.provincias.ToList(), "idProvincia", "Nombre_Provincia");
-            return View();
+            ViewBag.TipoTelefono = new SelectList(db.catalogo_telefonicos.ToList(), "idCatalogo_Telefonico", "Catalogo_Telefonico");
+
+            return View(sucursalModel); // Pasa el modelo a la vista
         }
 
         // POST: sucursales/Create
@@ -74,17 +78,50 @@ namespace RH_BanderaBlanca.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Identificador_Sucursal,Nombre_Sucursal,Fecha_Creacion")] sucursales sucursales)
+        public ActionResult Create(Sucursal post_sucursales)
         {
-            if (ModelState.IsValid)
+            using (var transaction = db.Database.BeginTransaction())
             {
-                db.sucursales.Add(sucursales);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+                try
+                {
+                    if (ModelState.IsValid)
+                    {
+                        if (post_sucursales.CrearSucursal(post_sucursales))
+                        {
+                            return RedirectToAction("Index");
+                        }
+                    }
 
-            return View(sucursales);
+                    ModelState.AddModelError("", "No se ha guardado la sucursal ");
+
+                    ViewBag.catalogo_telefonicos = new SelectList(db.catalogo_telefonicos.ToList(), "idCatalogo_Telefonico", "Catalogo_Telefonico", post_sucursales.telefonos.idCatalogo_Telefonico);
+                    ViewBag.Distritos = new SelectList(db.distritos.ToList(), "idDistrito", "Nombre_Distrito", post_sucursales.direcciones_Empresas.idDistrito);
+                    ViewBag.Cantones = new SelectList(db.cantones.ToList(), "idCanton", "Nombre_Canton", post_sucursales.direcciones_Empresas.idCanton);
+                    ViewBag.Provincias = new SelectList(db.provincias.ToList(), "idProvincia", "Nombre_Provincia", post_sucursales.direcciones_Empresas.idProvincia);
+                    ViewBag.TipoTelefono = new SelectList(db.catalogo_telefonicos.ToList(), "idCatalogo_Telefonico", "Catalogo_Telefonico", post_sucursales.telefonos.idCatalogo_Telefonico);
+
+                    return View(post_sucursales);
+                }
+                catch (Exception ex)
+                {
+                    // Si ocurre algún error, deshacer la transacción
+                    transaction.Rollback();
+
+                    // Aquí puedes loguear el error si es necesario
+                    ModelState.AddModelError("", "Ocurrió un error al guardar los datos: " + ex.Message);
+
+                    ViewBag.catalogo_telefonicos = new SelectList(db.catalogo_telefonicos.ToList(), "idCatalogo_Telefonico", "Catalogo_Telefonico", post_sucursales.telefonos.idCatalogo_Telefonico);
+                    ViewBag.Distritos = new SelectList(db.distritos.ToList(), "idDistrito", "Nombre_Distrito", post_sucursales.direcciones_Empresas.idDistrito);
+                    ViewBag.Cantones = new SelectList(db.cantones.ToList(), "idCanton", "Nombre_Canton", post_sucursales.direcciones_Empresas.idCanton);
+                    ViewBag.Provincias = new SelectList(db.provincias.ToList(), "idProvincia", "Nombre_Provincia", post_sucursales.direcciones_Empresas.idProvincia);
+                    ViewBag.TipoTelefono = new SelectList(db.catalogo_telefonicos.ToList(), "idCatalogo_Telefonico", "Catalogo_Telefonico", post_sucursales.telefonos.idCatalogo_Telefonico);
+
+
+                    return View(post_sucursales);
+                }
+            }
         }
+
 
         // GET: sucursales/Edit/5
         public ActionResult Edit(int? id)
