@@ -6,10 +6,12 @@
 
 <h2>Crear</h2>
 
-@using (Html.BeginForm()) 
+
+
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
 <div class="form-horizontal">
     <h4>personas</h4>
     <hr />
@@ -175,6 +177,14 @@
         <div class="col-md-10">
             @Html.DropDownListFor(model => model.empleados.Identificador_Sucursal, (SelectList)ViewBag.idSucursal, "Seleccione una Sucursal", new { @class = "form-control", @ID = "idSucursal" })
             @Html.ValidationMessageFor(model => model.empleados.Identificador_Sucursal, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.horarios.idTipo_Horario, "Horario", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.horarios.idTipo_Horario, (SelectList)ViewBag.idTipo_Horario, "Seleccione un tipo de Horario", new { @class = "form-control", @onchange = "CambiarCanton();", ID = "idTipo_Horario" })
+            @Html.ValidationMessageFor(model => model.horarios.idTipo_Horario, "", new { @class = "text-danger" })
         </div>
     </div>
 

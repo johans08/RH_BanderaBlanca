@@ -1,57 +1,75 @@
-﻿@model IEnumerable<DataBase_RH_BanderaBlanca.Models.personas>
+﻿@model IEnumerable<DataBase_RH_BanderaBlanca.Models.Persona>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Usuarios del Sistema";
 }
 
-<h2>Index</h2>
+<h2>Usuarios del sistema</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Nombre)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Primer_Apellido)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Segundo_Apellido)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Fecha_Nacimiento)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.catalogo_identificador.Descripcion_Identificador)
-        </th>
-        <th></th>
-    </tr>
+<!-- Modal -->
+<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <!-- modal-lg para un modal más ancho -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="errorModalLabel">Credenciales de Usuario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalContent">
+                <!-- Añadir un id para el contenido del modal -->
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        @if (ViewBag.QrCodeImage != null)
+                        {
+                            <img src="@ViewBag.QrCodeImage" alt="Código QR" class="img-fluid" style="max-width: 80%; height: auto;" />
+                        }
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            @if (ViewBag.Usuario != null)
+                            {
+                                <label for="usuario" class="form-label">Usuario:</label>
+                                <input type="text" class="form-control" id="usuario" value="@ViewBag.Usuario" readonly />
+                            }
+                        </div>
+                        <div class="mb-3">
+                            @if (ViewBag.Contrasena != null)
+                            {
+                                <label for="contrasena" class="form-label">Contraseña:</label>
+                                <input type="text" class="form-control" id="contrasena" value="@ViewBag.Contrasena" readonly />
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button id="downloadImage" class="btn btn-primary">Descargar como Imagen</button> <!-- Botón de descarga -->
+            </div>
+        </div>
+    </div>
+</div>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Nombre)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Primer_Apellido)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Segundo_Apellido)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Fecha_Nacimiento)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.catalogo_identificador.Descripcion_Identificador)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Identificador }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Identificador }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Identificador })
-        </td>
-    </tr>
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script> <!-- Importar html2canvas -->
+    <script>
+        $(document).ready(function () {
+            // Mostrar el modal si hay errores
+            @if (ViewBag.Error == null && (ViewBag.Usuario != null || ViewBag.Contrasena != null || ViewBag.QrCodeImage != null))
+            {
+                @:$('#errorModal').modal('show');
+            }
+
+            // Función para descargar la imagen
+            $('#downloadImage').click(function () {
+                html2canvas(document.getElementById('modalContent')).then(function (canvas) {
+                    // Crear un enlace temporal para la descarga
+                    let link = document.createElement('a');
+                    link.download = 'credenciales.png'; // Nombre del archivo
+                    link.href = canvas.toDataURL('image/png'); // Obtener la imagen como URL de datos
+                    link.click(); // Hacer clic en el enlace para descargar
+                });
+            });
+        });
+    </script>
 }
-
-</table>

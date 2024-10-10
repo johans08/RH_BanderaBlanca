@@ -14,6 +14,17 @@ namespace RH_BanderaBlanca.Controllers
         // GET: personas
         public ActionResult Index()
         {
+            if (TempData["QrCodeImage"] != null)
+            {
+                ViewBag.QrCodeImage = TempData["QrCodeImage"];
+                ViewBag.Usuario = TempData["Usuario"];
+                ViewBag.Contrasena = TempData["Contrasena"];
+            }
+            if (TempData["Error"] != null)
+            {
+                ViewBag.Error = TempData["Error"];
+            }
+
             return View();
         }
 
@@ -29,6 +40,7 @@ namespace RH_BanderaBlanca.Controllers
 
             var model = new Persona();
 
+            ViewBag.idTipo_Horario = new SelectList(db.tipo_horario.ToList(), "idTipo_Horario", "Tipo_Horario1");
             ViewBag.idEstado = new SelectList(db.estados_sistema.ToList(), "idEstado", "Estado");
             ViewBag.idRol = new SelectList(db.roles.ToList(), "idRol", "Descripcion_Rol");
             ViewBag.idSucursal = new SelectList(db.sucursales.ToList(), "Identificador_Sucursal", "Nombre_Sucursal");
@@ -53,10 +65,23 @@ namespace RH_BanderaBlanca.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    if (_persona.CrearPersona(_persona))
+                    bool ok = false;
+                    string qr = "";
+                    string usuario = "";
+                    string contrasena = "";
+
+                    (ok, qr, usuario, contrasena) = _persona.CrearPersona(_persona);
+                    if (ok)
                     {
-                        return RedirectToAction("Index");
+                        TempData["QrCodeImage"] = "data:image/png;base64," + qr;
+                        TempData["Usuario"] = usuario;
+                        TempData["Contrasena"] = contrasena;
                     }
+                    else
+                    {
+                        TempData["Error"] = "Ocurrió un error al crear la persona.";
+                    }
+                    return RedirectToAction("Index");
                 }
 
                 ModelState.AddModelError("", "No se ha guardado la persona");
@@ -71,13 +96,13 @@ namespace RH_BanderaBlanca.Controllers
 
                 CargarViewBags(_persona);
 
-
                 return View(_persona);
             }
         }
 
         private void CargarViewBags(Persona _persona)
         {
+            ViewBag.idTipo_Horario = new SelectList(db.tipo_horario.ToList(), "idTipo_Horario", "Tipo_Horario1", _persona.horarios.idTipo_Horario);
             ViewBag.idEstado = new SelectList(db.estados_sistema.ToList(), "idEstado", "Estado", _persona.usuarios.Estados_Sistema_idEstado);
             ViewBag.idRol = new SelectList(db.roles.ToList(), "idRol", "Descripcion_Rol", _persona.usuarios.idRol);
             ViewBag.idSucursal = new SelectList(db.sucursales.ToList(), "Identificador_Sucursal", "Nombre_Sucursal", _persona.empleados.Identificador_Sucursal);
