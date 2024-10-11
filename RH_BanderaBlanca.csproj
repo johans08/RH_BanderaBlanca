@@ -133,9 +133,12 @@
     <Compile Include="Controllers\catalogo_tipo_liquidacionesController.cs" />
     <Compile Include="Controllers\diasController.cs" />
     <Compile Include="Controllers\distritosController.cs" />
+    <Compile Include="Controllers\EmailController.cs" />
     <Compile Include="Controllers\estados_sistemaController.cs" />
     <Compile Include="Controllers\estados_solicitudesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\marcas_tiempoController.cs" />
     <Compile Include="Controllers\permisos_sistemaController.cs" />
     <Compile Include="Controllers\personasController.cs" />
     <Compile Include="Controllers\provinciasController.cs" />
@@ -336,9 +339,16 @@
     <Content Include="Views\distritos\Index.cshtml" />
     <Content Include="Views\personas\Create.cshtml" />
     <Content Include="Views\personas\Index.cshtml" />
+    <Content Include="Views\marcas_tiempo\Create.cshtml" />
+    <Content Include="Views\marcas_tiempo\Delete.cshtml" />
+    <Content Include="Views\marcas_tiempo\Details.cshtml" />
+    <Content Include="Views\marcas_tiempo\Edit.cshtml" />
+    <Content Include="Views\marcas_tiempo\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Email\" />
+    <Folder Include="Views\Login\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

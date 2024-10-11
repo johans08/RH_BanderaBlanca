@@ -9,14 +9,12 @@
 <!-- Modal -->
 <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <!-- modal-lg para un modal más ancho -->
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="errorModalLabel">Credenciales de Usuario</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="modalContent">
-                <!-- Añadir un id para el contenido del modal -->
                 <div class="row">
                     <div class="col-md-6 text-center">
                         @if (ViewBag.QrCodeImage != null)
@@ -31,6 +29,7 @@
                                 <label for="usuario" class="form-label">Usuario:</label>
                                 <input type="text" class="form-control" id="usuario" value="@ViewBag.Usuario" readonly />
                             }
+
                         </div>
                         <div class="mb-3">
                             @if (ViewBag.Contrasena != null)
@@ -44,32 +43,61 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button id="downloadImage" class="btn btn-primary">Descargar como Imagen</button> <!-- Botón de descarga -->
+                <button id="downloadImage" class="btn btn-primary">Descargar como Imagen</button>
+                <button id="sendEmail" class="btn btn-success">Enviar por Correo</button> <!-- Botón para enviar por correo -->
             </div>
         </div>
     </div>
 </div>
 
 @section Scripts {
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script> <!-- Importar html2canvas -->
-    <script>
-        $(document).ready(function () {
-            // Mostrar el modal si hay errores
-            @if (ViewBag.Error == null && (ViewBag.Usuario != null || ViewBag.Contrasena != null || ViewBag.QrCodeImage != null))
-            {
-                @:$('#errorModal').modal('show');
-            }
+    <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.8/dist/html-to-image.min.js"></script>
 
-            // Función para descargar la imagen
-            $('#downloadImage').click(function () {
-                html2canvas(document.getElementById('modalContent')).then(function (canvas) {
-                    // Crear un enlace temporal para la descarga
+    <script>
+    $(document).ready(function () {
+        $('#errorModal').modal('show');
+
+        // Descargar como imagen
+        $('#downloadImage').click(function () {
+            console.log("Descargar imagen clickeado");
+            htmlToImage.toPng(document.getElementById('modalContent'))
+                .then(function (dataUrl) {
                     let link = document.createElement('a');
-                    link.download = 'credenciales.png'; // Nombre del archivo
-                    link.href = canvas.toDataURL('image/png'); // Obtener la imagen como URL de datos
-                    link.click(); // Hacer clic en el enlace para descargar
+                    link.download = 'credenciales.jpg';
+                    link.href = dataUrl;
+                    link.click();
+                })
+                .catch(function (error) {
+                    console.error('Error al generar la imagen:', error);
                 });
-            });
         });
+
+        // Enviar la imagen por correo
+        $('#sendEmail').click(function () {
+            console.log("Enviar Correo clickeado");
+            htmlToImage.toPng(document.getElementById('modalContent'))
+                .then(function (dataUrl) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("EnviarEmail", "Email")',
+                        data: {
+                            image: dataUrl,
+                            usuario: $('#usuario').val(),
+                            contrasena: $('#contrasena').val()
+                        },
+                        success: function (response) {
+                            alert('Correo enviado exitosamente');
+                        },
+                        error: function (error) {
+                            alert('Error al enviar el correo');
+                        }
+                    });
+                })
+                .catch(function (error) {
+                    console.error('Error al capturar la imagen para correo:', error);
+                });
+        });
+    });
     </script>
+
 }

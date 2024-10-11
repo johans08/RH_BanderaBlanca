@@ -1,0 +1,50 @@
+﻿@model DataBase_RH_BanderaBlanca.Models.marcas_tiempo
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>marcas_tiempo</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Marca_Hora)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Marca_Hora)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Tardia)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Tardia)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Justificada)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Justificada)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.catalogo_movimientos.Descripcion_Movimientos)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.catalogo_movimientos.Descripcion_Movimientos)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
