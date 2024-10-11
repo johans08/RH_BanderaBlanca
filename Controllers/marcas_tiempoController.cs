@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using DataBase_RH_BanderaBlanca.Models;
+using ZXing;
 
 namespace RH_BanderaBlanca.Controllers
 {
@@ -34,7 +36,7 @@ namespace RH_BanderaBlanca.Controllers
 
                     marcas_tiempo _marcas_Tiempo = db.marcas_tiempo.FirstOrDefault(m => m.idEmpleado.Equals(_empleado.idEmpleado) && m.Fecha_Marca.Equals(DateTime.Today));
 
-                    if (_marcas_Tiempo == null)
+                    if (_marcas_Tiempo != null)
                     {
                         tipoMarca = 2;
                     }
@@ -44,10 +46,12 @@ namespace RH_BanderaBlanca.Controllers
                         Fecha_Marca = DateTime.Today,
                         idCatalogo_Movimientos = tipoMarca,
                         idEmpleado = _empleado.idEmpleado,
-                        Marca_Hora = DateTime.Now.TimeOfDay
-
+                        Marca_Hora = DateTime.Now.TimeOfDay,
+                        Justificada = false,
+                        Tardia = ValidarTardia(_horario, DateTime.Now.TimeOfDay)
                     };
-
+                    db.marcas_tiempo.Add(_marcas_Tiempo);
+                    db.SaveChanges();
                 }
                 return Json(new { success = true });
             }
@@ -56,6 +60,19 @@ namespace RH_BanderaBlanca.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
+
+        private bool ValidarTardia(horarios _horario, TimeSpan marca)
+        {
+            bool ok = false;
+
+            if (_horario != null && _horario.Hora_Entrada <= marca)
+            {
+                ok = true;
+            }
+
+            return ok;
+        }
+
 
         string ObtenerNombreDiaSemana(DateTime fecha)
         {
