@@ -23,7 +23,7 @@ namespace RH_BanderaBlanca.Controllers
             try
             {
                 int tipoMarca = 1;
-                DateTime hora = DateTime.Now;
+                DateTime horaActual = DateTime.Now;
 
                 Qr qr = new Qr();
                 bool ok = qr.ValidarQR(identificador);
@@ -34,32 +34,55 @@ namespace RH_BanderaBlanca.Controllers
                     empleados _empleado = db.empleados.FirstOrDefault(e => e.Personas_Identificador.Equals(identificador));
                     horarios _horario = db.horarios.FirstOrDefault(t => t.idEmpleado == _empleado.idEmpleado && t.dias.Nombre_Dia == diaHoy);
 
-                    marcas_tiempo _marcas_Tiempo = db.marcas_tiempo.FirstOrDefault(m => m.idEmpleado.Equals(_empleado.idEmpleado) && m.Fecha_Marca.Equals(DateTime.Today));
+                    // Obtener la última marca del empleado
+                    marcas_tiempo ultimaMarca = db.marcas_tiempo
+                        .Where(m => m.idEmpleado == _empleado.idEmpleado)
+                        .OrderByDescending(m => m.Fecha_Marca).ThenByDescending(m => m.Marca_Hora)
+                        .FirstOrDefault();
 
-                    if (_marcas_Tiempo != null)
+                    // Definir el tiempo de espera entre marcas (ejemplo: 10 minutos)
+                    int tiempoEsperaMinutos = 10;
+
+                    // Verificar si existe una marca reciente dentro del período de espera
+                    if (ultimaMarca != null)
+                    {
+                        TimeSpan tiempoTranscurrido = horaActual - ultimaMarca.Fecha_Marca.Add(ultimaMarca.Marca_Hora);
+                        if (tiempoTranscurrido.TotalMinutes < tiempoEsperaMinutos)
+                        {
+                            return Json(new { success = false, message = $"Debe esperar al menos {tiempoEsperaMinutos} minutos antes de marcar nuevamente." });
+                        }
+                    }
+
+                    // Determinar el tipo de marca (si ya tiene una marca registrada hoy, se asume salida)
+                    if (ultimaMarca != null && ultimaMarca.Fecha_Marca == DateTime.Today)
                     {
                         tipoMarca = 2;
                     }
 
-                    _marcas_Tiempo =  new marcas_tiempo
-                    { 
+                    // Registrar la nueva marca
+                    marcas_tiempo _marcas_Tiempo = new marcas_tiempo
+                    {
                         Fecha_Marca = DateTime.Today,
                         idCatalogo_Movimientos = tipoMarca,
                         idEmpleado = _empleado.idEmpleado,
-                        Marca_Hora = DateTime.Now.TimeOfDay,
+                        Marca_Hora = horaActual.TimeOfDay,
                         Justificada = false,
-                        Tardia = ValidarTardia(_horario, DateTime.Now.TimeOfDay)
+                        Tardia = ValidarTardia(_horario, horaActual.TimeOfDay)
                     };
                     db.marcas_tiempo.Add(_marcas_Tiempo);
                     db.SaveChanges();
+
+                    return Json(new { success = true });
                 }
-                return Json(new { success = true });
+
+                return Json(new { success = false, message = "El código QR no es válido." });
             }
             catch (Exception ex)
             {
                 return Json(new { success = false, message = ex.Message });
             }
         }
+
 
         private bool ValidarTardia(horarios _horario, TimeSpan marca)
         {

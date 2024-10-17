@@ -1,0 +1,95 @@
+﻿
+@{
+    @model DataBase_RH_BanderaBlanca.Models.Login
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
+    <meta name="author" content="AdminKit">
+    <meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="shortcut icon" href="~/Assets/img/icons/icon-48x48.png" />
+
+    <link rel="canonical" href="https://demo-basic.adminkit.io/" />
+
+    <link href="~/Assets/css/app.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Fundacion Bandera Blanca</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+<body>
+
+    <main class="d-flex w-100">
+        <div class="container d-flex flex-column">
+            <div class="row vh-100">
+                <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5 mx-auto d-table h-100">
+                    <div class="d-table-cell align-middle">
+
+                        <div class="text-center mt-4">
+                            <h1 class="h2">Inicia Sesión en tu Cuenta</h1>
+                            <p class="lead">
+                                Ingresa tu usuario y contraseña para iniciar sesión
+                            </p>
+                            
+                        </div>
+
+
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="m-sm-3">
+                                    @using (Html.BeginForm("ValidarCredenciales", "Login", FormMethod.Post, new { @class = "row g-3 needs-validation", @novalidate = "novalidate" }))
+                                    {
+
+                                        @Html.AntiForgeryToken()
+
+                                        <div class="col-12">
+                                            <label for="yourUsername" class="form-label">Usuario</label>
+                                            <div class="input-group has-validation">
+                                                @Html.TextBoxFor(model => model.usuario, new { @class = "form-control", @required = "required" })
+                                                <div class="invalid-feedback">Por favor ingresa tu usuario.</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <label for="yourPassword" class="form-label">Contraseña</label>
+                                            @Html.PasswordFor(model => model.clave, new { @class = "form-control", @required = "required" })
+                                            <div class="invalid-feedback">Por favor ingresa tu contraseña.</div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center mb-3">
+                            Don't have an account? <a href="pages-sign-up.html">Sign up</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="~/Assets/js/app.js"></script>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+</body>
+
+</html>

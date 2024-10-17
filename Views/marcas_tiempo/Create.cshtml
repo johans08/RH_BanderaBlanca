@@ -27,6 +27,9 @@
         const scanResult = document.getElementById('scanResult');
         const codeReader = new ZXing.BrowserQRCodeReader();
 
+        let bloqueado = false; // Variable para evitar múltiples envíos
+        let tiempoBloqueo = 5000; // Tiempo de bloqueo en milisegundos (5 segundos)
+
         // Obtener acceso a la cámara
         navigator.mediaDevices.getUserMedia({ video: true })
             .then(stream => {
@@ -42,7 +45,8 @@
         // Función para iniciar el escaneo
         function startScanning() {
             codeReader.decodeFromVideoDevice(undefined, video, (result, err) => {
-                if (result) {
+                if (result && !bloqueado) {
+                    bloqueado = true;  // Bloqueamos el escaneo
                     $.ajax({
                         type: 'POST',
                         url: '@Url.Action("ValidarMarca", "marcas_tiempo")',
@@ -57,17 +61,23 @@
                             } else {
                                 Swal.fire({
                                     title: "Marca Denegada",
-                                    text: "No se ha marcado asistencia",
+                                    text: response.message,
                                     icon: "error"
                                 });
                             }
                         },
                         error: function (error) {
                             Swal.fire({
-                                title: "Marca Denegada",
-                                text: "No se ha marcado asistencia",
+                                title: "Error",
+                                text: "Ocurrió un error al intentar registrar la marca.",
                                 icon: "error"
                             });
+                        },
+                        complete: function() {
+                            // Desbloquear el escaneo después de cierto tiempo
+                            setTimeout(function() {
+                                bloqueado = false;
+                            }, tiempoBloqueo);
                         }
                     });
                 }

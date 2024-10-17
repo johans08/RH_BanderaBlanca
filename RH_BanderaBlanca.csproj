@@ -345,11 +345,11 @@
     <Content Include="Views\marcas_tiempo\Details.cshtml" />
     <Content Include="Views\marcas_tiempo\Edit.cshtml" />
     <Content Include="Views\marcas_tiempo\Index.cshtml" />
+    <Content Include="Views\Login\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Email\" />
-    <Folder Include="Views\Login\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
