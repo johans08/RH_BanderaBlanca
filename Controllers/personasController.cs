@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Data.Entity;
+
 
 namespace RH_BanderaBlanca.Controllers
 {
@@ -14,6 +16,38 @@ namespace RH_BanderaBlanca.Controllers
         // GET: personas
         public ActionResult Index()
         {
+            var personas = db.personas
+               .Include(u => u.empleados)
+               .Include(u => u.direcciones_personas)
+               .Include(u => u.telefonos_personales)
+               .Include(u => u.correos)
+               .ToList();
+
+            var viewModelList = new List<Persona>();
+
+            foreach (var persona in personas)
+            {
+                var direccion = persona.direcciones_personas?.FirstOrDefault();
+                var telefono = persona.telefonos_personales?.FirstOrDefault();
+                var correo = persona.correos?.FirstOrDefault();
+                var empleado = persona.empleados?.FirstOrDefault();
+
+                // Verificar si usuario, empleado y persona no son nulos antes de crear el viewModel
+                if (persona != null && persona.empleados != null)
+                {
+                    var viewModel = new Persona
+                    {
+                        empleados = empleado,
+                        personas = persona,
+                        direcciones = direccion,
+                        telefonos = telefono,
+                        correos = correo
+                    };
+
+                    viewModelList.Add(viewModel);
+                }
+            }
+
             if (TempData["QrCodeImage"] != null)
             {
                 ViewBag.QrCodeImage = TempData["QrCodeImage"];
@@ -25,7 +59,11 @@ namespace RH_BanderaBlanca.Controllers
                 ViewBag.Error = TempData["Error"];
             }
 
-            return View();
+            return View(viewModelList);
+
+
+            
+
         }
 
         // GET: personas/Details/5

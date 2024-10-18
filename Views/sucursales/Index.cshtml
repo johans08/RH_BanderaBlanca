@@ -1,40 +1,49 @@
 ﻿@model IEnumerable<DataBase_RH_BanderaBlanca.Models.Sucursal>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Gestión de Sucursales";
 }
 
-<h2>Index</h2>
+<div class="row">
+    <div class="col-12 col-lg-12 col-xxl-12 d-flex">
+        <div class="card flex-fill">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Sucursales</h5>
+            </div>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.sucursales.Nombre_Sucursal)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.telefonos.Numero_Telefonico_Sucursal)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.direcciones_Empresas.Direccion_Especifica_Sucursal)
-        </th>
-        <th></th>
-    </tr>
+            <!-- Contenedor principal -->
+            <div class="container mt-4 pb-5">
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.sucursales.Nombre_Sucursal)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.telefonos.Numero_Telefonico_Sucursal)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.direcciones_Empresas.Direccion_Especifica_Sucursal)
-        </td>
-    </tr>
-}
+                <!-- Encabezado con botón para crear -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="mb-0">Lista de Sucursales</h2>
+                    <a href="@Url.Action("Create")" class="btn btn-success">Crear Nueva Sucursal</a>
+                </div>
 
-</table>
+                <!-- Tabla responsiva -->
+                <div class="table-responsive">
+                    <table class="table my-0 table-hover">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>@Html.DisplayNameFor(model => model.sucursales.Nombre_Sucursal)</th>
+                                <th>@Html.DisplayNameFor(model => model.telefonos.Numero_Telefonico_Sucursal)</th>
+                                <th>@Html.DisplayNameFor(model => model.direcciones_Empresas.Direccion_Especifica_Sucursal)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(modelItem => item.sucursales.Nombre_Sucursal)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.telefonos.Numero_Telefonico_Sucursal)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.direcciones_Empresas.Direccion_Especifica_Sucursal)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

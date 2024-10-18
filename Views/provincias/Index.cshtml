@@ -1,33 +1,51 @@
 ﻿@model IEnumerable<DataBase_RH_BanderaBlanca.Models.provincias>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Gestión de Provincias";
 }
 
-<h2>Index</h2>
+<div class="row">
+    <div class="col-12 col-lg-12 col-xxl-12 d-flex">
+        <div class="card flex-fill">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Provincias</h5>
+            </div>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Nombre_Provincia)
-        </th>
-        <th></th>
-    </tr>
+            <!-- Contenedor principal -->
+            <div class="container mt-4 pb-5">
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Nombre_Provincia)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.idProvincia }) |
-            @Html.ActionLink("Details", "Details", new { id=item.idProvincia }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.idProvincia })
-        </td>
-    </tr>
-}
+                <!-- Encabezado con botón para crear -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="mb-0">Lista de Provincias</h2>
+                    <a href="@Url.Action("Create")" class="btn btn-success">Crear Nueva Provincia</a>
+                </div>
 
-</table>
+                <!-- Tabla responsiva -->
+                <div class="table-responsive">
+                    <table class="table my-0 table-hover">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>@Html.DisplayNameFor(model => model.Nombre_Provincia)</th>
+                                <th class="text-right">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(modelItem => item.Nombre_Provincia)</td>
+                                    <td class="text-right">
+                                        @Html.ActionLink("Editar", "Edit", new { id = item.idProvincia }, new { @class = "btn btn-primary btn-sm" }) |
+                                        @Html.ActionLink("Detalles", "Details", new { id = item.idProvincia }, new { @class = "btn btn-info btn-sm" }) |
+                                        @Html.ActionLink("Eliminar", "Delete", new { id = item.idProvincia }, new { @class = "btn btn-danger btn-sm" })
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

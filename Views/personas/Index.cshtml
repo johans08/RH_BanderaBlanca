@@ -4,7 +4,59 @@
     ViewBag.Title = "Usuarios del Sistema";
 }
 
-<h2>Usuarios del sistema</h2>
+<div class="row">
+    <div class="col-12 col-lg-12 col-xxl-12 d-flex">
+        <div class="card flex-fill">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Personas</h5>
+            </div>
+
+            <!-- Contenedor principal -->
+            <div class="container mt-4 pb-5">
+
+                <!-- Encabezado con botón para crear -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="mb-0">Lista de Personas</h2>
+                    <a href="@Url.Action("Create")" class="btn btn-success">Crear Nueva Persona</a>
+                </div>
+
+                <!-- Tabla responsiva -->
+                <div class="table-responsive">
+                    <table class="table my-0 table-hover">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>@Html.DisplayNameFor(model => model.personas.Identificador)</th>
+                                <th>@Html.DisplayNameFor(model => model.personas.Nombre)</th>
+                                <th>@Html.DisplayNameFor(model => model.personas.Primer_Apellido)</th>
+                                <th>@Html.DisplayNameFor(model => model.personas.Segundo_Apellido)</th>
+                                <th>@Html.DisplayNameFor(model => model.personas.Fecha_Nacimiento)</th>
+                                <th>@Html.DisplayNameFor(model => model.empleados.puestos_laborales.Nombre_Puesto)</th>
+                                <th>@Html.DisplayNameFor(model => model.correos.Direccion_Correo)</th>
+                                <th class="text-right">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(modelItem => item.personas.Identificador)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.personas.Nombre)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.personas.Primer_Apellido)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.personas.Segundo_Apellido)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.personas.Fecha_Nacimiento)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.empleados.puestos_laborales.Nombre_Puesto)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.correos.Direccion_Correo)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 
 <!-- Modal -->
 <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
