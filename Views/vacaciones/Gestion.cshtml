@@ -1,0 +1,49 @@
+﻿@model IEnumerable<DataBase_RH_BanderaBlanca.Models.vacaciones>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<h2>Vacaciones disponibles: @ViewBag.diasDisponibles</h2>
+<h2>Vacaciones disfrutadas: @ViewBag.diasDescontados</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Cantidad_Dias)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Fecha_Solicitud)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.observacion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.estados_solicitudes.Estados_Solicitud)
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cantidad_Dias)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Fecha_Solicitud)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.observacion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.estados_solicitudes.Estados_Solicitud)
+            </td>
+        </tr>
+    }
+
+</table>

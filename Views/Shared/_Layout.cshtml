@@ -171,6 +171,64 @@
                             </ul>
                         </li>
                     }
+                    <li class="sidebar-header">Gestion de Solicitudes</li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" data-bs-toggle="collapse" href="#gestionarSolicitudesMenu" aria-expanded="false" aria-controls="gestionarSolicitudesMenu">
+                            <i class="align-middle" data-feather="sliders"></i>
+                            <span class="align-middle">Solicitudes</span>
+                        </a>
+                        <ul id="gestionarSolicitudesMenu" class="sidebar-dropdown list-unstyled collapse">
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="@Url.Action("Index", "vacaciones")">
+                                    <span class="align-middle">Gestionar Vacaciones</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="@Url.Action("Index", "incapacidades")">
+                                    <span class="align-middle">Gestionar Incapacidades</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="@Url.Action("Index", "permisos_solicitados")">
+                                    <span class="align-middle">Gestionar Permisos</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="@Url.Action("Index", "horas_extras")">
+                                    <span class="align-middle">Gestionar Horas Extras</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="sidebar-header">Gestion de Solicitudes Personales</li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" data-bs-toggle="collapse" href="#gestionarSolicitudesPersonalesMenu" aria-expanded="false" aria-controls="gestionarSolicitudesPersonalesMenu">
+                            <i class="align-middle" data-feather="sliders"></i>
+                            <span class="align-middle">Solicitudes Personales</span>
+                        </a>
+                        <ul id="gestionarSolicitudesPersonalesMenu" class="sidebar-dropdown list-unstyled collapse">
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="@Url.Action("Gestion", "vacaciones")">
+                                    <span class="align-middle">Solicitar Vacaciones</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="@Url.Action("Gestion", "incapacidades")">
+                                    <span class="align-middle">Solicitar Incapacidades</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="@Url.Action("Gestion", "permisos_solicitados")">
+                                    <span class="align-middle">Solicitar Permisos</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="@Url.Action("Gestion", "horas_extras")">
+                                    <span class="align-middle">Solicitar Horas Extras</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                     <li class="sidebar-item active">
                         <a class="sidebar-link" href="@Url.Action("Index", "Home")">
                             <i class="align-middle" data-feather="sliders"></i>

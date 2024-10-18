@@ -1,0 +1,66 @@
+﻿@model DataBase_RH_BanderaBlanca.Models.horas_extras
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>horas_extras</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Cantidad_Horas)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Cantidad_Horas)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Detalle_Hora_Extra)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Detalle_Hora_Extra)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Monto_HoraExtra)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Monto_HoraExtra)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.observacion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.observacion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.aprobada)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.aprobada)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.catalogo_horas_extras.Tipo_Hora_Extra)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.catalogo_horas_extras.Tipo_Hora_Extra)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

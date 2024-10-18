@@ -1,0 +1,50 @@
+﻿@model DataBase_RH_BanderaBlanca.Models.vacaciones
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>vacaciones</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Cantidad_Dias)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Cantidad_Dias)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Fecha_Solicitud)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Fecha_Solicitud)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.observacion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.observacion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.estados_solicitudes.Estados_Solicitud)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.estados_solicitudes.Estados_Solicitud)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

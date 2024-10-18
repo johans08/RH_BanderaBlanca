@@ -137,9 +137,12 @@
     <Compile Include="Controllers\estados_sistemaController.cs" />
     <Compile Include="Controllers\estados_solicitudesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\horas_extrasController.cs" />
+    <Compile Include="Controllers\incapacidadesController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\marcas_tiempoController.cs" />
     <Compile Include="Controllers\permisos_sistemaController.cs" />
+    <Compile Include="Controllers\permisos_solicitadosController.cs" />
     <Compile Include="Controllers\personasController.cs" />
     <Compile Include="Controllers\provinciasController.cs" />
     <Compile Include="Controllers\puestos_laboralesController.cs" />
@@ -147,6 +150,7 @@
     <Compile Include="Controllers\sucursalesController.cs" />
     <Compile Include="Controllers\tipo_evaluacionController.cs" />
     <Compile Include="Controllers\tipo_horarioController.cs" />
+    <Compile Include="Controllers\vacacionesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -346,6 +350,30 @@
     <Content Include="Views\marcas_tiempo\Edit.cshtml" />
     <Content Include="Views\marcas_tiempo\Index.cshtml" />
     <Content Include="Views\Login\Login.cshtml" />
+    <Content Include="Views\incapacidades\Create.cshtml" />
+    <Content Include="Views\incapacidades\Delete.cshtml" />
+    <Content Include="Views\incapacidades\Details.cshtml" />
+    <Content Include="Views\incapacidades\Edit.cshtml" />
+    <Content Include="Views\incapacidades\Index.cshtml" />
+    <Content Include="Views\incapacidades\Gestion.cshtml" />
+    <Content Include="Views\vacaciones\Create.cshtml" />
+    <Content Include="Views\vacaciones\Delete.cshtml" />
+    <Content Include="Views\vacaciones\Details.cshtml" />
+    <Content Include="Views\vacaciones\Edit.cshtml" />
+    <Content Include="Views\vacaciones\Index.cshtml" />
+    <Content Include="Views\vacaciones\Gestion.cshtml" />
+    <Content Include="Views\permisos_solicitados\Create.cshtml" />
+    <Content Include="Views\permisos_solicitados\Delete.cshtml" />
+    <Content Include="Views\permisos_solicitados\Details.cshtml" />
+    <Content Include="Views\permisos_solicitados\Edit.cshtml" />
+    <Content Include="Views\permisos_solicitados\Index.cshtml" />
+    <Content Include="Views\permisos_solicitados\Gestion.cshtml" />
+    <Content Include="Views\horas_extras\Create.cshtml" />
+    <Content Include="Views\horas_extras\Delete.cshtml" />
+    <Content Include="Views\horas_extras\Details.cshtml" />
+    <Content Include="Views\horas_extras\Edit.cshtml" />
+    <Content Include="Views\horas_extras\Index.cshtml" />
+    <Content Include="Views\horas_extras\Gestion.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,64 @@
+﻿@model IEnumerable<DataBase_RH_BanderaBlanca.Models.horas_extras>
+
+@{
+    ViewBag.Title = "Gestion";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Cantidad_Horas)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Detalle_Hora_Extra)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Monto_HoraExtra)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.observacion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.hizoHoras)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.aprobada)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.catalogo_horas_extras.Tipo_Hora_Extra)
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cantidad_Horas)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Detalle_Hora_Extra)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Monto_HoraExtra)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.observacion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.hizoHoras)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.aprobada)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.catalogo_horas_extras.Tipo_Hora_Extra)
+            </td>
+        </tr>
+    }
+
+</table>

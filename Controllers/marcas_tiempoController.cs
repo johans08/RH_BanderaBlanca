@@ -6,6 +6,7 @@ using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Drawing;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using DataBase_RH_BanderaBlanca.Models;
@@ -59,6 +60,12 @@ namespace RH_BanderaBlanca.Controllers
                         tipoMarca = 2;
                     }
 
+                    if (ultimaMarca != null && ultimaMarca.idCatalogo_Movimientos.Equals(tipoMarca))
+                    {
+                        return Json(new { success = false, message = $"Ya has marcado tu salida y entrada el dia de hoy" });
+                    }
+                
+
                     // Registrar la nueva marca
                     marcas_tiempo _marcas_Tiempo = new marcas_tiempo
                     {
@@ -72,6 +79,9 @@ namespace RH_BanderaBlanca.Controllers
                     db.marcas_tiempo.Add(_marcas_Tiempo);
                     db.SaveChanges();
 
+                    TieneHorasExtra(_empleado.idEmpleado, DateTime.Today, _marcas_Tiempo.Marca_Hora, _horario, tipoMarca);
+
+
                     return Json(new { success = true });
                 }
 
@@ -83,6 +93,38 @@ namespace RH_BanderaBlanca.Controllers
             }
         }
 
+        private void TieneHorasExtra(int idEmpleado, DateTime fecha, TimeSpan Marca_Hora, horarios horario, int tipoMarca)
+        {
+            horas_extras horaExtra = db.horas_extras.FirstOrDefault(h => h.Fecha_HoraExtra.Equals(fecha) && h.idEmpleado.Equals(idEmpleado));
+
+            int cantidadHoras = ValidarHoraExtra(horario, Marca_Hora);
+
+            if (horaExtra == null)
+            {
+                return;
+            }
+
+            if (cantidadHoras >= horaExtra.Cantidad_Horas && horaExtra.aprobada == true && tipoMarca == 2)
+            {
+                horaExtra.hizoHoras = true;
+                db.Entry(horaExtra).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+        }
+
+        private int ValidarHoraExtra(horarios _horario, TimeSpan marca)
+        {
+            int cantidadHoras = 0;
+
+            // Verifica si el horario no es nulo y si la marca es posterior a la hora de salida
+            if (_horario != null && marca > _horario.Hora_Salida)
+            {
+                TimeSpan diferencia = marca - _horario.Hora_Salida;
+                cantidadHoras = (int)diferencia.TotalHours;
+            }
+
+            return cantidadHoras;
+        }
 
         private bool ValidarTardia(horarios _horario, TimeSpan marca)
         {
