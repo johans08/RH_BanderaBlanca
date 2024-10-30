@@ -10,54 +10,46 @@
 {
     @Html.AntiForgeryToken()
     
-    <div class="form-horizontal">
-        <h4>incapacidades</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.Fecha_Incapacidad)
+<div class="form-horizontal">
+    <h4>incapacidades</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.Fecha_Incapacidad)
 
-        @Html.HiddenFor(model => model.Fecha_Final_Incapacidad)
+    @Html.HiddenFor(model => model.Fecha_Final_Incapacidad)
 
-        @Html.HiddenFor(model => model.idEmpleado)
+    @Html.HiddenFor(model => model.idEmpleado)
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.idCatalogo_Incapacidad, "idCatalogo_Incapacidad", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("idCatalogo_Incapacidad", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.idCatalogo_Incapacidad, "", new { @class = "text-danger" })
-            </div>
-        </div>
+    @Html.HiddenFor(model => model.Monto_Deduccion)
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Cantidad_Dias, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Cantidad_Dias, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Cantidad_Dias, "", new { @class = "text-danger" })
-            </div>
-        </div>
+    @Html.HiddenFor(model => model.Detalle_Incapacidad)
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Monto_Deduccion, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Monto_Deduccion, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Monto_Deduccion, "", new { @class = "text-danger" })
-            </div>
-        </div>
+    @Html.HiddenFor(model => model.Cantidad_Dias)
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Detalle_Incapacidad, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Detalle_Incapacidad, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Detalle_Incapacidad, "", new { @class = "text-danger" })
-            </div>
-        </div>
+    @Html.HiddenFor(model => model.idCatalogo_Incapacidad)
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Observacion, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Observacion, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Observacion, "", new { @class = "text-danger" })
         </div>
     </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Estados_Solicitudes_idEstados_Solicitudes, "Estados Solicitudes", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownList("Estados_Solicitudes_idEstados_Solicitudes", null, htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Estados_Solicitudes_idEstados_Solicitudes, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-default" />
+        </div>
+    </div>
+</div>
 }
 
 <div>

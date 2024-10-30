@@ -70,7 +70,7 @@ namespace RH_BanderaBlanca.Controllers
                 userSesion = (Persona)Session["user"];
 
                 permisos_solicitados.Fecha_Solicitud = DateTime.Now;
-                permisos_solicitados.descontado = false;
+                permisos_solicitados.ConGoce = false;
 
                 // Validación de fecha pasada
                 if (permisos_solicitados.Fecha_Permiso < DateTime.Today)
@@ -96,7 +96,7 @@ namespace RH_BanderaBlanca.Controllers
 
                 permisos_solicitados.idEstados_Solicitudes = 3;
                 permisos_solicitados.idEmpleado = userSesion.empleados.idEmpleado;
-                permisos_solicitados.descontado = false;
+                permisos_solicitados.ConGoce = false;
 
                 db.permisos_solicitados.Add(permisos_solicitados);
                 db.SaveChanges();

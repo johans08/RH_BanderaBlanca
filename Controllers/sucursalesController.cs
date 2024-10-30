@@ -73,6 +73,29 @@ namespace RH_BanderaBlanca.Controllers
             return View(sucursalModel); // Pasa el modelo a la vista
         }
 
+
+        public JsonResult ObtenerCantones(int idProvincia)
+        {
+            var cantones = db.cantones.Where(c => c.idProvincia == idProvincia).Select(c => new
+            {
+                id = c.idCanton,
+                nombre = c.Nombre_Canton
+            }).ToList();
+
+            return Json(cantones, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult ObtenerDistritos(int idCanton)
+        {
+            var distritos = db.distritos.Where(d => d.idCanton == idCanton).Select(d => new
+            {
+                id = d.idDistrito,
+                nombre = d.Nombre_Distrito
+            }).ToList();
+
+            return Json(distritos, JsonRequestBehavior.AllowGet);
+        }
+
         // POST: sucursales/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.

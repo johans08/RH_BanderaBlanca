@@ -104,9 +104,9 @@ namespace RH_BanderaBlanca.Controllers
                 return;
             }
 
-            if (cantidadHoras >= horaExtra.Cantidad_Horas && horaExtra.aprobada == true && tipoMarca == 2)
+            if (cantidadHoras >= horaExtra.Cantidad_Horas && horaExtra.Aprobada == true && tipoMarca == 2)
             {
-                horaExtra.hizoHoras = true;
+                horaExtra.HizoHoras = true;
                 db.Entry(horaExtra).State = EntityState.Modified;
                 db.SaveChanges();
             }

@@ -15,7 +15,6 @@
             <div class="container mt-5 pb-5">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2 class="mb-0">Vacaciones</h2>
-                    <a href="@Url.Action("Create")" class="btn btn-success">Crear Nueva Solicitud</a>
                 </div>
 
                 <div class="table-responsive">
@@ -24,7 +23,7 @@
                             <tr>
                                 <th>@Html.DisplayNameFor(model => model.Cantidad_Dias)</th>
                                 <th>@Html.DisplayNameFor(model => model.Fecha_Solicitud)</th>
-                                <th>@Html.DisplayNameFor(model => model.observacion)</th>
+                                <th>@Html.DisplayNameFor(model => model.Observacion)</th>
                                 <th>@Html.DisplayNameFor(model => model.estados_solicitudes.Estados_Solicitud)</th>
                                 <th></th>
                             </tr>
@@ -35,7 +34,7 @@
                                 <tr>
                                     <td>@Html.DisplayFor(modelItem => item.Cantidad_Dias)</td>
                                     <td>@Html.DisplayFor(modelItem => item.Fecha_Solicitud)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.observacion)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Observacion)</td>
                                     <td>@Html.DisplayFor(modelItem => item.estados_solicitudes.Estados_Solicitud)</td>
                                     <td class="text-right">
                                         @Html.ActionLink("Editar", "Edit", new { date = item.Fecha_Inicio, idEmpleado = item.idEmpleado }, new { @class = "btn btn-primary btn-sm" })

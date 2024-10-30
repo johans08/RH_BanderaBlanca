@@ -24,7 +24,7 @@
 
     @Html.HiddenFor(model => model.Monto_HoraExtra)
 
-    @Html.HiddenFor(model => model.hizoHoras)
+    @Html.HiddenFor(model => model.HizoHoras)
 
     <div class="form-group">
         @Html.LabelFor(model => model.idCatalogo_Horas_Extras, "idCatalogo_Horas_Extras", htmlAttributes: new { @class = "control-label col-md-2" })
@@ -35,19 +35,19 @@
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.observacion, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.Observacion, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.observacion, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.observacion, "", new { @class = "text-danger" })
+            @Html.EditorFor(model => model.Observacion, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Observacion, "", new { @class = "text-danger" })
         </div>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.aprobada, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.Aprobada, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
             <div class="checkbox">
-                @Html.EditorFor(model => model.aprobada)
-                @Html.ValidationMessageFor(model => model.aprobada, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.Aprobada)
+                @Html.ValidationMessageFor(model => model.Aprobada, "", new { @class = "text-danger" })
             </div>
         </div>
     </div>

@@ -144,6 +144,7 @@
     <Compile Include="Controllers\permisos_sistemaController.cs" />
     <Compile Include="Controllers\permisos_solicitadosController.cs" />
     <Compile Include="Controllers\personasController.cs" />
+    <Compile Include="Controllers\planillasController.cs" />
     <Compile Include="Controllers\provinciasController.cs" />
     <Compile Include="Controllers\puestos_laboralesController.cs" />
     <Compile Include="Controllers\rolesController.cs" />
@@ -374,6 +375,12 @@
     <Content Include="Views\horas_extras\Edit.cshtml" />
     <Content Include="Views\horas_extras\Index.cshtml" />
     <Content Include="Views\horas_extras\Gestion.cshtml" />
+    <Content Include="Views\planillas\Create.cshtml" />
+    <Content Include="Views\planillas\Delete.cshtml" />
+    <Content Include="Views\planillas\Details.cshtml" />
+    <Content Include="Views\planillas\Edit.cshtml" />
+    <Content Include="Views\planillas\Index.cshtml" />
+    <Content Include="Views\planillas\Gestion.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

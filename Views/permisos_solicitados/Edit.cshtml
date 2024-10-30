@@ -32,20 +32,20 @@
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.descontado, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.ConGoce, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
             <div class="checkbox">
-                @Html.EditorFor(model => model.descontado)
-                @Html.ValidationMessageFor(model => model.descontado, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.ConGoce)
+                @Html.ValidationMessageFor(model => model.ConGoce, "", new { @class = "text-danger" })
             </div>
         </div>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.observacion, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.Observacion, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.observacion, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.observacion, "", new { @class = "text-danger" })
+            @Html.EditorFor(model => model.Observacion, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Observacion, "", new { @class = "text-danger" })
         </div>
     </div>
 

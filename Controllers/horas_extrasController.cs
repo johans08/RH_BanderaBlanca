@@ -65,8 +65,8 @@ namespace RH_BanderaBlanca.Controllers
                 Persona userSesion = new Persona();
                 userSesion = (Persona)Session["user"];
 
-                _horas_extras.aprobada = false;
-                _horas_extras.hizoHoras = false;
+                _horas_extras.Aprobada = false;
+                _horas_extras.HizoHoras = false;
                 _horas_extras.idCatalogo_Horas_Extras = 1;
                 _horas_extras.idEmpleado = userSesion.empleados.idEmpleado;
 

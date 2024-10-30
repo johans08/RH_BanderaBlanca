@@ -27,7 +27,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Fundacion Bandera Blanca</title>
     @Scripts.Render("~/bundles/modernizr")
-
+    @Styles.Render("~/Content/css")
 </head>
 
 
@@ -53,8 +53,21 @@
                
                 <ul class="sidebar-nav">
 
-                    @if (user.ObtenerIdsDeAccesos(user.listaAccesos).Contains(1)) // Mantenimientos = 1
+                    @if (user.ObtenerIdsDeAccesos(user.listaAccesos).Contains(1)) // Mantenimientos
                     {
+                        <li class="sidebar-item active">
+                            <a class="sidebar-link" href="@Url.Action("Index", "Personas")">
+                                <i class="align-middle" data-feather="sliders"></i>
+                                <span class="align-middle">Agregar Usuario</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item active">
+                            <a class="sidebar-link" href="@Url.Action("Index", "Sucursales")">
+                                <i class="align-middle" data-feather="sliders"></i>
+                                <span class="align-middle">Agregar Sucursales</span>
+                            </a>
+                        </li>
+
                         <li class="sidebar-header">Mantenimientos</li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" data-bs-toggle="collapse" href="#mantenimientosMenu" aria-expanded="false" aria-controls="mantenimientosMenu">
@@ -178,70 +191,102 @@
                             </ul>
                         </li>
                     }
-                    <li class="sidebar-header">Gestion de Solicitudes</li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" data-bs-toggle="collapse" href="#gestionarSolicitudesMenu" aria-expanded="false" aria-controls="gestionarSolicitudesMenu">
-                            <i class="align-middle" data-feather="sliders"></i>
-                            <span class="align-middle">Solicitudes</span>
-                        </a>
-                        <ul id="gestionarSolicitudesMenu" class="sidebar-dropdown list-unstyled collapse">
-                            <li class="sidebar-item">
-                                <a class="sidebar-link" href="@Url.Action("Index", "vacaciones")">
-                                    <span class="align-middle">Gestionar Vacaciones</span>
-                                </a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a class="sidebar-link" href="@Url.Action("Index", "incapacidades")">
-                                    <span class="align-middle">Gestionar Incapacidades</span>
-                                </a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a class="sidebar-link" href="@Url.Action("Index", "permisos_solicitados")">
-                                    <span class="align-middle">Gestionar Permisos</span>
-                                </a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a class="sidebar-link" href="@Url.Action("Index", "horas_extras")">
-                                    <span class="align-middle">Gestionar Horas Extras</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="sidebar-header">Gestion de Solicitudes Personales</li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" data-bs-toggle="collapse" href="#gestionarSolicitudesPersonalesMenu" aria-expanded="false" aria-controls="gestionarSolicitudesPersonalesMenu">
-                            <i class="align-middle" data-feather="sliders"></i>
-                            <span class="align-middle">Solicitudes Personales</span>
-                        </a>
-                        <ul id="gestionarSolicitudesPersonalesMenu" class="sidebar-dropdown list-unstyled collapse">
-                            <li class="sidebar-item">
-                                <a class="sidebar-link" href="@Url.Action("Gestion", "vacaciones")">
-                                    <span class="align-middle">Solicitar Vacaciones</span>
-                                </a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a class="sidebar-link" href="@Url.Action("Gestion", "incapacidades")">
-                                    <span class="align-middle">Solicitar Incapacidades</span>
-                                </a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a class="sidebar-link" href="@Url.Action("Gestion", "permisos_solicitados")">
-                                    <span class="align-middle">Solicitar Permisos</span>
-                                </a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a class="sidebar-link" href="@Url.Action("Gestion", "horas_extras")">
-                                    <span class="align-middle">Solicitar Horas Extras</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="sidebar-item active">
-                        <a class="sidebar-link" href="@Url.Action("Index", "Personas")">
-                            <i class="align-middle" data-feather="sliders"></i>
-                            <span class="align-middle">Agregar Usuario</span>
-                        </a>
-                    </li>
+                    @if (user.ObtenerIdsDeAccesos(user.listaAccesos).Contains(2)) // Gestion de Solicitudes
+                    {
+                        <li class="sidebar-header">Gestion de Solicitudes</li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" data-bs-toggle="collapse" href="#gestionarSolicitudesMenu" aria-expanded="false" aria-controls="gestionarSolicitudesMenu">
+                                <i class="align-middle" data-feather="sliders"></i>
+                                <span class="align-middle">Solicitudes</span>
+                            </a>
+                            <ul id="gestionarSolicitudesMenu" class="sidebar-dropdown list-unstyled collapse">
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="@Url.Action("Index", "vacaciones")">
+                                        <span class="align-middle">Gestionar Vacaciones</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="@Url.Action("Index", "incapacidades")">
+                                        <span class="align-middle">Gestionar Incapacidades</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="@Url.Action("Index", "permisos_solicitados")">
+                                        <span class="align-middle">Gestionar Permisos</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="@Url.Action("Index", "horas_extras")">
+                                        <span class="align-middle">Gestionar Horas Extras</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    }
+                    @if (user.ObtenerIdsDeAccesos(user.listaAccesos).Contains(3)) // Gestion de Pagos
+                    {
+                        <li class="sidebar-header">Gestion de Pagos</li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" data-bs-toggle="collapse" href="#gestionarPagos" aria-expanded="false" aria-controls="gestionarPagos">
+                                <i class="align-middle" data-feather="sliders"></i>
+                                <span class="align-middle">Pagos</span>
+                            </a>
+                            <ul id="gestionarPagos" class="sidebar-dropdown list-unstyled collapse">
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="@Url.Action("Index", "planillas")">
+                                        <span class="align-middle">Gestionar Planillas</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="@Url.Action("Index", "incapacidades")">
+                                        <span class="align-middle">Gestionar Aguinaldos</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="@Url.Action("Index", "permisos_solicitados")">
+                                        <span class="align-middle">Gestionar Liquidacion</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    }
+                    @if (user.ObtenerIdsDeAccesos(user.listaAccesos).Contains(5)) // Gestion de Solicitudes Personales
+                    {
+                        <li class="sidebar-header">Gestion de Solicitudes Personales</li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" data-bs-toggle="collapse" href="#gestionarSolicitudesPersonalesMenu" aria-expanded="false" aria-controls="gestionarSolicitudesPersonalesMenu">
+                                <i class="align-middle" data-feather="sliders"></i>
+                                <span class="align-middle">Solicitudes Personales</span>
+                            </a>
+                            <ul id="gestionarSolicitudesPersonalesMenu" class="sidebar-dropdown list-unstyled collapse">
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="@Url.Action("Gestion", "vacaciones")">
+                                        <span class="align-middle">Solicitar Vacaciones</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="@Url.Action("Gestion", "incapacidades")">
+                                        <span class="align-middle">Solicitar Incapacidades</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="@Url.Action("Gestion", "permisos_solicitados")">
+                                        <span class="align-middle">Solicitar Permisos</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="@Url.Action("Gestion", "horas_extras")">
+                                        <span class="align-middle">Solicitar Horas Extras</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="@Url.Action("Gestion", "planillas")">
+                                        <span class="align-middle">Registro de Planillas</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    }
                 </ul>
             </div>
         </nav>

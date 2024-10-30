@@ -90,7 +90,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.direcciones.idProvincia, "Provincia", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.DropDownListFor(model => model.direcciones.idProvincia, (SelectList)ViewBag.Provincias, "Seleccione una provincia", new { @class = "form-control", @onchange = "CambiarProvincia();", ID = "Provincias" })
+            @Html.DropDownListFor(model => model.direcciones.idProvincia, (SelectList)ViewBag.Provincias, "Seleccione una provincia", new { @class = "form-control", @onchange = "CambiarProvincia();", id = "Provincias" })
             @Html.ValidationMessageFor(model => model.direcciones.idProvincia, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -98,7 +98,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.direcciones.idCanton, "Cantón", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.DropDownListFor(model => model.direcciones.idCanton, (SelectList)ViewBag.Cantones, "Seleccione un cantón", new { @class = "form-control", @onchange = "CambiarCanton();", ID = "Cantones" })
+            @Html.DropDownListFor(model => model.direcciones.idCanton, new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"), "Seleccione un cantón", new { @class = "form-control", @onchange = "CambiarCanton();", id = "Cantones" })
             @Html.ValidationMessageFor(model => model.direcciones.idCanton, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -106,7 +106,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.direcciones.idDistrito, "Distrito", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.DropDownListFor(model => model.direcciones.idDistrito, (SelectList)ViewBag.Distritos, "Seleccione un distrito", new { @class = "form-control", @ID = "Distritos" })
+            @Html.DropDownListFor(model => model.direcciones.idDistrito, new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"), "Seleccione un distrito", new { @class = "form-control", id = "Distritos" })
             @Html.ValidationMessageFor(model => model.direcciones.idDistrito, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -233,3 +233,44 @@
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
+
+
+@section Scripts {
+
+    <script>
+        function CambiarProvincia() {
+            const provinciaId = $('#Provincias').val();
+            $('#Cantones').empty().append('<option value="">Seleccione un cantón</option>');
+            $('#Distritos').empty().append('<option value="">Seleccione un distrito</option>');
+
+            if (provinciaId) {
+                $.getJSON('/personas/ObtenerCantones', { idProvincia: provinciaId }, function (data) {
+                    $.each(data, function (index, item) {
+                        $('#Cantones').append($('<option>', {
+                            value: item.id,
+                            text: item.nombre
+                        }));
+                    });
+                });
+            }
+        }
+
+        function CambiarCanton() {
+            const cantonId = $('#Cantones').val();
+            $('#Distritos').empty().append('<option value="">Seleccione un distrito</option>');
+
+            if (cantonId) {
+                $.getJSON('/personas/ObtenerDistritos', { idCanton: cantonId }, function (data) {
+                    $.each(data, function (index, item) {
+                        $('#Distritos').append($('<option>', {
+                            value: item.id,
+                            text: item.nombre
+                        }));
+                    });
+                });
+            }
+        }
+    </script>
+
+
+}

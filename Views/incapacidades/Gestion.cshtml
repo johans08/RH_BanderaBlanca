@@ -1,43 +1,88 @@
-﻿@model IEnumerable<DataBase_RH_BanderaBlanca.Models.incapacidades>
+﻿@model IEnumerable<DataBase_RH_BanderaBlanca.Models.Incapacidad_Comprobante>
 
 @{
-    ViewBag.Title = "Gestion";
+    ViewBag.Title = "Gestión de Incapacidades";
 }
 
-<h2>Gestion Personal de Incapacidades</h2>
+<div class="row">
+    <div class="col-12 col-lg-12 col-xxl-12 d-flex">
+        <div class="card flex-fill">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Incapacidades</h5>
+            </div>
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Cantidad_Dias)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Monto_Deduccion)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Detalle_Incapacidad)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.catalogo_incapacidades.Descripcion)
-        </th>
-    </tr>
+            <!-- Contenedor principal -->
+            <div class="container mt-4 pb-5">
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cantidad_Dias)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Monto_Deduccion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Detalle_Incapacidad)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.catalogo_incapacidades.Descripcion)
-            </td>
-        </tr>
-    }
+                <!-- Encabezado con botón para crear -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="mb-0">Lista de Incapacidades</h2>
+                    <a href="@Url.Action("Create")" class="btn btn-success">Crear Nueva Incapacidad</a>
+                </div>
 
-</table>
+                <!-- Tabla responsiva -->
+                <div class="table-responsive">
+                    <table class="table my-0 table-hover">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Colaborador</th>
+                                <th>@Html.DisplayNameFor(model => model.incapacidad.Cantidad_Dias)</th>
+                                <th>@Html.DisplayNameFor(model => model.incapacidad.Monto_Deduccion)</th>
+                                <th>@Html.DisplayNameFor(model => model.incapacidad.Detalle_Incapacidad)</th>
+                                <th>@Html.DisplayNameFor(model => model.incapacidad.catalogo_incapacidades.Descripcion)</th>
+                                <th>@Html.DisplayNameFor(model => model.incapacidad.Observacion)</th>
+                                <th>@Html.DisplayNameFor(model => model.incapacidad.estados_solicitudes.Estados_Solicitud)</th>
+                                <th>Imagen Comprobante</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(modelItem => item.personas.Nombre) @Html.DisplayFor(modelItem => item.personas.Primer_Apellido) @Html.DisplayFor(modelItem => item.personas.Segundo_Apellido)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.incapacidad.Cantidad_Dias)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.incapacidad.Monto_Deduccion)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.incapacidad.Detalle_Incapacidad)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.incapacidad.catalogo_incapacidades.Descripcion)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.incapacidad.Observacion)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.incapacidad.estados_solicitudes.Estados_Solicitud)</td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(item.comprobantes.Imagen_Comprobante))
+                                        {
+                                            <!-- Imagen pequeña que al hacer clic abre el modal -->
+                                            <img src="data:image/jpeg;base64,@item.comprobantes.Imagen_Comprobante"
+                                                 alt="Comprobante"
+                                                 style="width: 100px; height: auto; cursor: pointer;"
+                                                 data-bs-toggle="modal"
+                                                 data-bs-target="#imageModal"
+                                                 onclick="document.getElementById('modalImage').src = 'data:image/jpeg;base64,@item.comprobantes.Imagen_Comprobante'" />
+                                        }
+                                        else
+                                        {
+                                            <span>Imagen no disponible</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para expandir la imagen -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalLabel">Imagen Comprobante</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="modalImage" src="" alt="Imagen Expandida" style="width: 100%; height: auto;" />
+            </div>
+        </div>
+    </div>
+</div>
