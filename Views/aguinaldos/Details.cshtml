@@ -1,0 +1,66 @@
+﻿@model DataBase_RH_BanderaBlanca.Models.aguinaldos
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>aguinaldos</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Monto_Aguinaldo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Monto_Aguinaldo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Fecha_Inicial_Cobro)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Fecha_Inicial_Cobro)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Fecha_Final_Cobro)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Fecha_Final_Cobro)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Empleados_idEmpleado)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Empleados_idEmpleado)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.catalogo_aguinaldo.Descripcion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.catalogo_aguinaldo.Descripcion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.estados_solicitudes.Estados_Solicitud)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.estados_solicitudes.Estados_Solicitud)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.FechaAguinaldo }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

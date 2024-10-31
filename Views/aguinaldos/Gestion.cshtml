@@ -1,0 +1,51 @@
+﻿@model IEnumerable<DataBase_RH_BanderaBlanca.Models.Aguinaldo>
+
+@{
+    ViewBag.Title = "Gestion";
+}
+
+<div class="row">
+    <div class="col-12 col-lg-12 col-xxl-12 d-flex">
+        <div class="card flex-fill">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Gestión de Aguinaldos</h5>
+            </div>
+
+            <!-- Ajustamos el contenedor para que no quede pegado al borde inferior -->
+            <div class="container mt-5 pb-5">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="mb-0">Aguinaldos</h2>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table my-0 table-hover">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>@Html.DisplayNameFor(model => model.aguinaldo.FechaAguinaldo)</th>
+                                <th>Colaborador</th>
+                                <th>@Html.DisplayNameFor(model => model.aguinaldo.Fecha_Inicial_Cobro)</th>
+                                <th>@Html.DisplayNameFor(model => model.aguinaldo.Fecha_Final_Cobro)</th>
+                                <th>@Html.DisplayNameFor(model => model.aguinaldo.Monto_Aguinaldo)</th>
+                                <th>@Html.DisplayNameFor(model => model.aguinaldo.estados_solicitudes.Estados_Solicitud)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(modelItem => item.aguinaldo.FechaAguinaldo)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.personas.Nombre) @Html.DisplayFor(modelItem => item.personas.Primer_Apellido) @Html.DisplayFor(modelItem => item.personas.Segundo_Apellido)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.aguinaldo.Fecha_Inicial_Cobro)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.aguinaldo.Fecha_Final_Cobro)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.aguinaldo.Monto_Aguinaldo)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.aguinaldo.estados_solicitudes.Estados_Solicitud)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

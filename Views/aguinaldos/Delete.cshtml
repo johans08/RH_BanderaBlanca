@@ -1,0 +1,72 @@
+﻿@model DataBase_RH_BanderaBlanca.Models.aguinaldos
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>aguinaldos</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Monto_Aguinaldo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Monto_Aguinaldo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Fecha_Inicial_Cobro)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Fecha_Inicial_Cobro)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Fecha_Final_Cobro)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Fecha_Final_Cobro)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Empleados_idEmpleado)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Empleados_idEmpleado)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.catalogo_aguinaldo.Descripcion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.catalogo_aguinaldo.Descripcion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.estados_solicitudes.Estados_Solicitud)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.estados_solicitudes.Estados_Solicitud)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

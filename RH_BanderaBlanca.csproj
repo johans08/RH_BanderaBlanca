@@ -123,6 +123,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\aguinaldosController.cs" />
     <Compile Include="Controllers\cantonesController.cs" />
     <Compile Include="Controllers\catalogo_correosController.cs" />
     <Compile Include="Controllers\catalogo_horas_extrasController.cs" />
@@ -381,6 +382,12 @@
     <Content Include="Views\planillas\Edit.cshtml" />
     <Content Include="Views\planillas\Index.cshtml" />
     <Content Include="Views\planillas\Gestion.cshtml" />
+    <Content Include="Views\aguinaldos\Create.cshtml" />
+    <Content Include="Views\aguinaldos\Delete.cshtml" />
+    <Content Include="Views\aguinaldos\Details.cshtml" />
+    <Content Include="Views\aguinaldos\Edit.cshtml" />
+    <Content Include="Views\aguinaldos\Index.cshtml" />
+    <Content Include="Views\aguinaldos\Gestion.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
