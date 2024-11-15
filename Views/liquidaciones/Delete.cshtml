@@ -1,0 +1,64 @@
+﻿@model DataBase_RH_BanderaBlanca.Models.liquidaciones
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>liquidaciones</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Preaviso)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Preaviso)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DiasPreaviso)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DiasPreaviso)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.catalogo_tipo_liquidaciones.Tipo_Liquidaciones)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.catalogo_tipo_liquidaciones.Tipo_Liquidaciones)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.detalle_maestro_liquidaciones.Fecha_Liquidacion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.detalle_maestro_liquidaciones.Fecha_Liquidacion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.estados_solicitudes.Estados_Solicitud)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.estados_solicitudes.Estados_Solicitud)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

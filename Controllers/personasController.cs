@@ -1,6 +1,6 @@
 ﻿using DataBase_RH_BanderaBlanca.Models;
 using System;
-using System.Collections.Generic;
+using System.Collections.Generic; using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -93,6 +93,46 @@ namespace RH_BanderaBlanca.Controllers
 
             return Json(distritos, JsonRequestBehavior.AllowGet);
         }
+
+        public JsonResult ObtenerJefatura(int idPuesto)
+        {
+            var personaList = db.empleados.Where(d => d.idPuestos_Laboral == idPuesto).ToList();
+            var personasListXPermiso = new List<object>(); // Lista para almacenar los resultados
+
+            foreach (var persona in personaList)
+            {
+                var usuario = db.usuarios.FirstOrDefault(u => u.idEmpleado == persona.idEmpleado);
+
+                // Verificar si se encontró el usuario asociado
+                if (usuario != null)
+                {
+                    var personaEntity = db.personas.FirstOrDefault(u => u.Identificador == persona.Personas_Identificador);
+
+                    if (personaEntity != null)
+                    {
+                        Persona _persona = new Persona();
+                        _persona.personas = personaEntity;
+                        _persona.usuarios = usuario;
+                        _persona.listaAccesos = _persona.GenerarListaAccesos(_persona);
+
+                        // Verificar si el usuario tiene el permiso con ID 7
+                        if (_persona.ObtenerIdsDeAccesos(_persona.listaAccesos).Contains(7))
+                        {
+                            personasListXPermiso.Add(new
+                            {
+                                id = persona.idEmpleado,
+                                nombre = $"{_persona.personas.Nombre} {_persona.personas.Primer_Apellido} {_persona.personas.Segundo_Apellido}"
+                            });
+                        }
+                    }
+                }
+            }
+
+            // Devolver la lista en formato JSON
+            return Json(personasListXPermiso, JsonRequestBehavior.AllowGet);
+        }
+
+
 
 
         // GET: personas/Create

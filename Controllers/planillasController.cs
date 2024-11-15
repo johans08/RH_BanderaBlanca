@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Generic; using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
@@ -17,42 +17,66 @@ namespace RH_BanderaBlanca.Controllers
         // GET: planillas
         public ActionResult Index()
         {
-            var detalle_planillas = db.detalle_maestro_planillas.ToList();
-            var viewModelList = new List<Planilla>();
-
-            foreach (var detalle_planilla in detalle_planillas)
+            try
             {
-                // Utilizar SingleOrDefault o FirstOrDefault para obtener un único objeto en lugar de una colección
-                var planilla = db.planillas
-                                    .SingleOrDefault(i => i.Fecha_Planilla == detalle_planilla.Fecha_Planilla);
+                // Obtener el mes y año actuales
+                var mesActual = DateTime.Now.Month;
+                var anioActual = DateTime.Now.Year;
 
-                var empleado = db.empleados
-                                   .SingleOrDefault(i => i.idEmpleado == planilla.idEmpleado);
+                // Obtener solo las planillas del mes y año actuales con sus detalles
+                var detalle_planillas = db.detalle_maestro_planillas
+                                           .Where(dp => dp.Fecha_Planilla.Month == mesActual && dp.Fecha_Planilla.Year == anioActual)
+                                           .ToList();
 
-                var persona = db.personas
-                                    .SingleOrDefault(i => i.Identificador == empleado.Personas_Identificador);
+                var viewModelList = new List<Planilla>();
 
-                var sucursales = db.sucursales
-                                    .SingleOrDefault(i => i.Identificador_Sucursal == empleado.Identificador_Sucursal);
-
-                // Verificar si incapacidad no es nulo antes de crear el viewModel
-                if (planilla != null)
+                foreach (var detalle_planilla in detalle_planillas)
                 {
-                    var viewModel = new Planilla
+                    var idEmpleado = detalle_planilla.idEmpleado;
+
+                    // Filtrar planillas por mes, año y empleado actual
+                    var planilla = db.planillas
+                                     .SingleOrDefault(i => i.Fecha_Planilla.Month == mesActual
+                                                         && i.Fecha_Planilla.Year == anioActual
+                                                         && i.idEmpleado == idEmpleado);
+
+                    if (planilla != null)
                     {
-                        detalle_planillas = detalle_planilla,
-                        planillas = planilla,
-                        personas = persona,
-                        empleados = empleado,
-                        sucursales = sucursales
-                    };
+                        var empleado = db.empleados
+                                         .SingleOrDefault(i => i.idEmpleado == planilla.idEmpleado);
 
-                    viewModelList.Add(viewModel);
+                        var persona = empleado != null
+                            ? db.personas.SingleOrDefault(i => i.Identificador == empleado.Personas_Identificador)
+                            : null;
+
+                        var sucursal = empleado != null
+                            ? db.sucursales.SingleOrDefault(i => i.Identificador_Sucursal == empleado.Identificador_Sucursal)
+                            : null;
+
+                        var viewModel = new Planilla
+                        {
+                            detalle_planillas = detalle_planilla,
+                            planillas = planilla,
+                            personas = persona,
+                            empleados = empleado,
+                            sucursales = sucursal
+                        };
+
+                        viewModelList.Add(viewModel);
+                    }
                 }
-            }
 
-            return View(viewModelList);
+                return View(viewModelList);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error en la acción Index: {ex.Message}");
+                return View(new List<Planilla>());
+            }
         }
+
+
+
 
         public ActionResult Gestion()
         {
@@ -64,22 +88,21 @@ namespace RH_BanderaBlanca.Controllers
 
             foreach (var detalle_planilla in detalle_planillas)
             {
-                // Utilizar SingleOrDefault o FirstOrDefault para obtener un único objeto en lugar de una colección
-                var planilla = db.planillas
-                                    .SingleOrDefault(i => i.Fecha_Planilla == detalle_planilla.Fecha_Planilla);
-
-                var empleado = db.empleados
+                // Verificar si incapacidad no es nulo antes de crear el viewModel
+                if (detalle_planilla != null)
+                {
+                    // Utilizar SingleOrDefault o FirstOrDefault para obtener un único objeto en lugar de una colección
+                    var planilla = db.planillas
+                                        .SingleOrDefault(i => i.Fecha_Planilla == detalle_planilla.Fecha_Planilla && i.idEmpleado == userSesion.empleados.idEmpleado);
+                    var empleado = db.empleados
                                    .SingleOrDefault(i => i.idEmpleado == planilla.idEmpleado);
 
-                var persona = db.personas
-                                    .SingleOrDefault(i => i.Identificador == empleado.Personas_Identificador);
+                    var persona = db.personas
+                                        .SingleOrDefault(i => i.Identificador == empleado.Personas_Identificador);
 
-                var sucursales = db.sucursales
-                                    .SingleOrDefault(i => i.Identificador_Sucursal == empleado.Identificador_Sucursal);
+                    var sucursales = db.sucursales
+                                        .SingleOrDefault(i => i.Identificador_Sucursal == empleado.Identificador_Sucursal);
 
-                // Verificar si incapacidad no es nulo antes de crear el viewModel
-                if (planilla != null)
-                {
                     var viewModel = new Planilla
                     {
                         detalle_planillas = detalle_planilla,
@@ -96,7 +119,19 @@ namespace RH_BanderaBlanca.Controllers
             return View(viewModelList);
         }
 
-
+        [HttpPost]
+        public ActionResult UpdateEstado(DateTime id, int estado, int idEmpleado)
+        {
+            // Buscar la liquidación por ID
+            var pago = db.planillas.FirstOrDefault(l => l.Fecha_Planilla == id && l.idEmpleado == idEmpleado);
+            if (pago != null)
+            {
+                // Actualizar el estado de la liquidación
+                pago.idEstados_Solicitudes = estado;
+                db.SaveChanges();
+            }
+            return RedirectToAction("Index");
+        }
 
         // GET: planillas/Create
         public ActionResult PagarPlanillas()

@@ -1,6 +1,6 @@
 ﻿using DataBase_RH_BanderaBlanca.Models;
 using System;
-using System.Collections.Generic;
+using System.Collections.Generic; using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Net;

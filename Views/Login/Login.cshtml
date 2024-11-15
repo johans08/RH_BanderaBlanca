@@ -1,95 +1,58 @@
-﻿
-@{
+﻿@{
     @model DataBase_RH_BanderaBlanca.Models.Login
     Layout = null;
 }
 
 <!DOCTYPE html>
-<html>
+<html lang="es">
 
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
-    <meta name="author" content="AdminKit">
-    <meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+    <title>Iniciar Sesión - Fundación Bandera Blanca</title>
 
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="shortcut icon" href="~/Assets/img/icons/icon-48x48.png" />
-
-    <link rel="canonical" href="https://demo-basic.adminkit.io/" />
-
-    <link href="~/Assets/css/app.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Fundacion Bandera Blanca</title>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
-
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
 
-    <main class="d-flex w-100">
-        <div class="container d-flex flex-column">
-            <div class="row vh-100">
-                <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5 mx-auto d-table h-100">
-                    <div class="d-table-cell align-middle">
+<body class="bg-light">
 
-                        <div class="text-center mt-4">
-                            <h1 class="h2">Inicia Sesión en tu Cuenta</h1>
-                            <p class="lead">
-                                Ingresa tu usuario y contraseña para iniciar sesión
-                            </p>
-                            
-                        </div>
+    <div class="container vh-100 d-flex align-items-center justify-content-center">
+        <div class="row bg-white shadow rounded overflow-hidden" style="max-width: 700px; width: 100%;">
+            <!-- Sección de la Imagen a la Izquierda -->
+            <div class="col-md-5 d-flex align-items-center justify-content-center bg-light p-4">
+                <img src="~/Assets/img/icons/icon-48x48.png" alt="Logo de la Empresa" class="img-fluid" style="max-width: 100%; max-height: 200px;">
+            </div>
 
+            <!-- Sección del Formulario a la Derecha -->
+            <div class="col-md-7 p-4">
+                <h3 class="text-center">Inicia Sesión en tu Cuenta</h3>
+                <p class="text-center text-muted">Ingresa tu usuario y contraseña para continuar</p>
 
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="m-sm-3">
-                                    @using (Html.BeginForm("ValidarCredenciales", "Login", FormMethod.Post, new { @class = "row g-3 needs-validation", @novalidate = "novalidate" }))
-                                    {
+                @using (Html.BeginForm("ValidarCredenciales", "Login", FormMethod.Post, new { @class = "needs-validation", @novalidate = "novalidate" }))
+                {
+                    @Html.AntiForgeryToken()
 
-                                        @Html.AntiForgeryToken()
-
-                                        <div class="col-12">
-                                            <label for="yourUsername" class="form-label">Usuario</label>
-                                            <div class="input-group has-validation">
-                                                @Html.TextBoxFor(model => model.usuario, new { @class = "form-control", @required = "required" })
-                                                <div class="invalid-feedback">Por favor ingresa tu usuario.</div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-12">
-                                            <label for="yourPassword" class="form-label">Contraseña</label>
-                                            @Html.PasswordFor(model => model.clave, new { @class = "form-control", @required = "required" })
-                                            <div class="invalid-feedback">Por favor ingresa tu contraseña.</div>
-                                        </div>
-
-                                        <div class="col-12">
-                                            <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
-                                        </div>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                        <div class="text-center mb-3">
-                            Don't have an account? <a href="pages-sign-up.html">Sign up</a>
-                        </div>
+                    <div class="mb-3">
+                        <label for="usuario" class="form-label">Usuario</label>
+                        @Html.TextBoxFor(model => model.usuario, new { @class = "form-control", @id = "usuario", @required = "required", placeholder = "Ingresa tu usuario" })
+                        <div class="invalid-feedback">Por favor ingresa tu usuario.</div>
                     </div>
-                </div>
+
+                    <div class="mb-3">
+                        <label for="clave" class="form-label">Contraseña</label>
+                        @Html.PasswordFor(model => model.clave, new { @class = "form-control", @id = "clave", @required = "required", placeholder = "Ingresa tu contraseña" })
+                        <div class="invalid-feedback">Por favor ingresa tu contraseña.</div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
+                }
             </div>
         </div>
-    </main>
-    <script src="~/Assets/js/app.js"></script>
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
+    </div>
+
+    <!-- Bootstrap Bundle with Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

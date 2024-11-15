@@ -140,6 +140,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\horas_extrasController.cs" />
     <Compile Include="Controllers\incapacidadesController.cs" />
+    <Compile Include="Controllers\liquidacionesController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\marcas_tiempoController.cs" />
     <Compile Include="Controllers\permisos_sistemaController.cs" />
@@ -388,6 +389,11 @@
     <Content Include="Views\aguinaldos\Edit.cshtml" />
     <Content Include="Views\aguinaldos\Index.cshtml" />
     <Content Include="Views\aguinaldos\Gestion.cshtml" />
+    <Content Include="Views\liquidaciones\Create.cshtml" />
+    <Content Include="Views\liquidaciones\Delete.cshtml" />
+    <Content Include="Views\liquidaciones\Details.cshtml" />
+    <Content Include="Views\liquidaciones\Edit.cshtml" />
+    <Content Include="Views\liquidaciones\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

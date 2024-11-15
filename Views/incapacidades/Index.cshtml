@@ -2,6 +2,8 @@
 
 @{
     ViewBag.Title = "Gestión de Incapacidades";
+    DataBase_RH_BanderaBlanca.Models.Persona user = new DataBase_RH_BanderaBlanca.Models.Persona();
+    user = (DataBase_RH_BanderaBlanca.Models.Persona)Session["user"];
 }
 
 <div class="row">
@@ -24,6 +26,8 @@
                     <table class="table my-0 table-hover">
                         <thead class="thead-light">
                             <tr>
+                                <th>Fecha Inicio de Incapacidad</th>
+                                <th>Fecha Final de Incapacidad</th>
                                 <th>Colaborador</th>
                                 <th>@Html.DisplayNameFor(model => model.incapacidad.Cantidad_Dias)</th>
                                 <th>@Html.DisplayNameFor(model => model.incapacidad.Monto_Deduccion)</th>
@@ -39,6 +43,8 @@
                             @foreach (var item in Model)
                             {
                                 <tr>
+                                    <td>@Html.DisplayFor(modelItem => item.incapacidad.Fecha_Incapacidad)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.incapacidad.Fecha_Final_Incapacidad)</td>
                                     <td>@Html.DisplayFor(modelItem => item.personas.Nombre) @Html.DisplayFor(modelItem => item.personas.Primer_Apellido) @Html.DisplayFor(modelItem => item.personas.Segundo_Apellido)</td>
                                     <td>@Html.DisplayFor(modelItem => item.incapacidad.Cantidad_Dias)</td>
                                     <td>@Html.DisplayFor(modelItem => item.incapacidad.Monto_Deduccion)</td>
@@ -62,9 +68,19 @@
                                             <span>Imagen no disponible</span>
                                         }
                                     </td>
-                                    <td class="text-right">
-                                        @Html.ActionLink("Editar", "Edit", new { idInicio = item.incapacidad.Fecha_Incapacidad, idFinal = item.incapacidad.Fecha_Final_Incapacidad, idEmpleado = item.incapacidad.idEmpleado }, new { @class = "btn btn-primary btn-sm" })
-                                    </td>
+                                    @if ((item.incapacidad.estados_solicitudes.idEstados_Solicitudes != 1 && item.incapacidad.estados_solicitudes.idEstados_Solicitudes != 2) && user.ObtenerIdsDeAccesos(user.listaAccesos).Contains(4)) // Solo muestra los botones si el idEstado es 3
+                                    {
+                                        <td class="text-right">
+                                            @Html.ActionLink("Editar", "Edit", new { idInicio = item.incapacidad.Fecha_Incapacidad, idFinal = item.incapacidad.Fecha_Final_Incapacidad, idEmpleado = item.incapacidad.idEmpleado }, new { @class = "btn btn-primary btn-sm" })
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-right">
+                                            Accion no disponible
+                                        </td>
+                                    }
+
                                 </tr>
                             }
                         </tbody>

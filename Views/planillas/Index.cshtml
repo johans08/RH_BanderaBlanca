@@ -2,7 +2,10 @@
 
 @{
     ViewBag.Title = "Index";
+    DataBase_RH_BanderaBlanca.Models.Persona user = new DataBase_RH_BanderaBlanca.Models.Persona();
+    user = (DataBase_RH_BanderaBlanca.Models.Persona)Session["user"];
 }
+
 
 <div class="row">
     <div class="col-12 col-lg-12 col-xxl-12 d-flex">
@@ -18,10 +21,12 @@
                     @using (Html.BeginForm("PagarPlanillas", "planillas", FormMethod.Post))
                     {
                         @Html.AntiForgeryToken()
-                        <button type="submit" class="btn btn-success">Generar Planillas</button>
-
+                        if (user.ObtenerIdsDeAccesos(user.listaAccesos).Contains(8)) // Solo muestra los botones si el idEstado es 3
+                        { 
+                            <button type="submit" class="btn btn-success">Generar Planillas</button>
+                        }
                     }
-                </div>
+                    </div>
 
                 <div class="table-responsive">
                     <table class="table my-0 table-hover">
@@ -31,12 +36,18 @@
                                 <th>Colaborador</th>
                                 <th>@Html.DisplayNameFor(model => model.planillas.Fecha_Planilla)</th>
                                 <th>@Html.DisplayNameFor(model => model.planillas.Comentario_Planilla)</th>
+                                <th>Salario Laboral</th>
                                 <th>@Html.DisplayNameFor(model => model.detalle_planillas.Monto_Total_Horas_Extras)</th>
                                 <th>@Html.DisplayNameFor(model => model.detalle_planillas.Monto_Total_Incapacidades)</th>
-                                <th>@Html.DisplayNameFor(model => model.detalle_planillas.Monto_CalculosFiscales)</th>
                                 <th>@Html.DisplayNameFor(model => model.detalle_planillas.Monto_Descontado_Renta)</th>
+                                <th>@Html.DisplayNameFor(model => model.detalle_planillas.Monto_Total_Deducciones)</th>
                                 <th>@Html.DisplayNameFor(model => model.detalle_planillas.Monto_Total_Planilla)</th>
                                 <th>@Html.DisplayNameFor(model => model.planillas.estados_solicitudes.Estados_Solicitud)</th>
+                                @if (user.ObtenerIdsDeAccesos(user.listaAccesos).Contains(6)) // Solo muestra los botones si el idEstado es 3
+                                {
+                                    <th>Acciones</th>
+                                }
+
                             </tr>
                         </thead>
                         <tbody>
@@ -47,12 +58,38 @@
                                     <td>@Html.DisplayFor(modelItem => item.personas.Nombre) @Html.DisplayFor(modelItem => item.personas.Primer_Apellido) @Html.DisplayFor(modelItem => item.personas.Segundo_Apellido)</td>
                                     <td>@Html.DisplayFor(modelItem => item.planillas.Fecha_Planilla)</td>
                                     <td>@Html.DisplayFor(modelItem => item.planillas.Comentario_Planilla)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.empleados.puestos_laborales.Salario_Puesto)</td>
                                     <td>@Html.DisplayFor(modelItem => item.detalle_planillas.Monto_Total_Horas_Extras)</td>
                                     <td>@Html.DisplayFor(modelItem => item.detalle_planillas.Monto_Total_Incapacidades)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.detalle_planillas.Monto_CalculosFiscales)</td>
                                     <td>@Html.DisplayFor(modelItem => item.detalle_planillas.Monto_Descontado_Renta)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.detalle_planillas.Monto_Total_Deducciones)</td>
                                     <td>@Html.DisplayFor(modelItem => item.detalle_planillas.Monto_Total_Planilla)</td>
                                     <td>@Html.DisplayFor(modelItem => item.planillas.estados_solicitudes.Estados_Solicitud)</td>
+                                    @if ((item.planillas.idEstados_Solicitudes != 1 && item.planillas.idEstados_Solicitudes != 2) && user.ObtenerIdsDeAccesos(user.listaAccesos).Contains(6)) // Solo muestra los botones si el idEstado es 3
+                                    {
+                                        <!-- Botón para aprobar -->
+                                        using (Html.BeginForm("UpdateEstado", "Planillas", FormMethod.Post))
+                                        {
+                                            @Html.Hidden("id", item.planillas.Fecha_Planilla) <!-- Id del registro de la liquidación -->
+                                            @Html.Hidden("estado", 1) <!-- Estado 1 para aprobado -->
+                                            @Html.Hidden("idEmpleado", item.planillas.idEmpleado)
+                                            <td><button type="submit" class="btn btn-success">Aprobar</button></td>
+                                        }
+
+                                        <!-- Botón para rechazar -->
+                                        using (Html.BeginForm("UpdateEstado", "Planillas", FormMethod.Post))
+                                        {
+                                            @Html.Hidden("id", item.planillas.Fecha_Planilla)
+                                            @Html.Hidden("estado", 2) <!-- Estado 2 para rechazado -->
+                                            @Html.Hidden("idEmpleado", item.planillas.idEmpleado)
+                                            <td><button type="submit" class="btn btn-danger">Rechazar</button></td>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td>Accion no disponible</td>
+
+                                    }
                                 </tr>
                             }
                         </tbody>

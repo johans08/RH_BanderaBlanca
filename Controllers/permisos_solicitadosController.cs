@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Generic; using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
@@ -17,7 +17,10 @@ namespace RH_BanderaBlanca.Controllers
         // GET: permisos_solicitados
         public ActionResult Index()
         {
-            var permisos_solicitados = db.permisos_solicitados.Include(p => p.estados_solicitudes);
+            Persona userSesion = new Persona();
+            userSesion = (Persona)Session["user"];
+
+            var permisos_solicitados = db.permisos_solicitados.Where(p => p.idEmpleado != userSesion.empleados.idEmpleado).Include(p => p.estados_solicitudes);
             return View(permisos_solicitados.ToList());
         }
 

@@ -25,6 +25,8 @@
                     <table class="table my-0 table-hover">
                         <thead class="thead-light">
                             <tr>
+                                <th>Fecha Inicio de Incapacidad</th>
+                                <th>Fecha Final de Incapacidad</th>
                                 <th>Colaborador</th>
                                 <th>@Html.DisplayNameFor(model => model.incapacidad.Cantidad_Dias)</th>
                                 <th>@Html.DisplayNameFor(model => model.incapacidad.Monto_Deduccion)</th>
@@ -39,6 +41,8 @@
                             @foreach (var item in Model)
                             {
                                 <tr>
+                                    <td>@Html.DisplayFor(modelItem => item.incapacidad.Fecha_Incapacidad)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.incapacidad.Fecha_Final_Incapacidad)</td>
                                     <td>@Html.DisplayFor(modelItem => item.personas.Nombre) @Html.DisplayFor(modelItem => item.personas.Primer_Apellido) @Html.DisplayFor(modelItem => item.personas.Segundo_Apellido)</td>
                                     <td>@Html.DisplayFor(modelItem => item.incapacidad.Cantidad_Dias)</td>
                                     <td>@Html.DisplayFor(modelItem => item.incapacidad.Monto_Deduccion)</td>

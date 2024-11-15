@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Generic; using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
@@ -21,15 +21,17 @@ namespace RH_BanderaBlanca.Controllers
 
             foreach (var aguinaldo in aguinaldos)
             {
-                var empleado = db.empleados
-                                   .SingleOrDefault(i => i.idEmpleado == aguinaldo.Empleados_idEmpleado);
-
-                var persona = db.personas
-                                    .SingleOrDefault(i => i.Identificador == empleado.Personas_Identificador);
+                
 
                 // Verificar si incapacidad no es nulo antes de crear el viewModel
                 if (aguinaldo != null)
                 {
+                    var empleado = db.empleados
+                                   .SingleOrDefault(i => i.idEmpleado == aguinaldo.Empleados_idEmpleado);
+
+                    var persona = db.personas
+                                        .SingleOrDefault(i => i.Identificador == empleado.Personas_Identificador);
+
                     var viewModel = new Aguinaldo
                     {
                         personas = persona,
@@ -54,15 +56,18 @@ namespace RH_BanderaBlanca.Controllers
 
             foreach (var aguinaldo in aguinaldos)
             {
-                var empleado = db.empleados
-                                   .SingleOrDefault(i => i.idEmpleado == aguinaldo.Empleados_idEmpleado);
-
-                var persona = db.personas
-                                    .SingleOrDefault(i => i.Identificador == empleado.Personas_Identificador);
+                
 
                 // Verificar si incapacidad no es nulo antes de crear el viewModel
                 if (aguinaldo != null)
                 {
+
+                    var empleado = db.empleados
+                                   .SingleOrDefault(i => i.idEmpleado == aguinaldo.Empleados_idEmpleado);
+
+                    var persona = db.personas
+                                        .SingleOrDefault(i => i.Identificador == empleado.Personas_Identificador);
+
                     var viewModel = new Aguinaldo
                     {
                         personas = persona,
@@ -77,7 +82,18 @@ namespace RH_BanderaBlanca.Controllers
             return View(viewModelList);
         }
 
-
+        public ActionResult UpdateEstado(DateTime id, int estado, int idEmpleado)
+        {
+            // Buscar la liquidación por ID
+            var pago = db.aguinaldos.FirstOrDefault(l => l.FechaAguinaldo == id && l.Empleados_idEmpleado == idEmpleado);
+            if (pago != null)
+            {
+                // Actualizar el estado de la liquidación
+                pago.idEstados_Solicitudes = estado;
+                db.SaveChanges();
+            }
+            return RedirectToAction("Index");
+        }
 
         // GET: planillas/Create
         public ActionResult PagarAguinaldos()

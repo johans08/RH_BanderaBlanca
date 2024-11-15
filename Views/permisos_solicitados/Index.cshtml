@@ -2,6 +2,8 @@
 
 @{
     ViewBag.Title = "Gestión de Permisos Solicitados";
+    DataBase_RH_BanderaBlanca.Models.Persona user = new DataBase_RH_BanderaBlanca.Models.Persona();
+    user = (DataBase_RH_BanderaBlanca.Models.Persona)Session["user"];
 }
 
 <div class="row">
@@ -39,9 +41,12 @@
                                     <td>@Html.DisplayFor(modelItem => item.Fecha_Solicitud)</td>
                                     <td>@Html.DisplayFor(modelItem => item.Observacion)</td>
                                     <td>@Html.DisplayFor(modelItem => item.estados_solicitudes.Estados_Solicitud)</td>
-                                    <td class="text-right">
-                                        @Html.ActionLink("Editar", "Edit", new { date = item.Fecha_Permiso, idEmpleado = item.idEmpleado }, new { @class = "btn btn-primary btn-sm" })
-                                    </td>
+                                    @if ((item.estados_solicitudes.idEstados_Solicitudes != 1 && item.estados_solicitudes.idEstados_Solicitudes != 2) && user.ObtenerIdsDeAccesos(user.listaAccesos).Contains(4)) // Solo muestra los botones si el idEstado es 3
+                                    {
+                                        <td class="text-right">
+                                            @Html.ActionLink("Editar", "Edit", new { date = item.Fecha_Permiso, idEmpleado = item.idEmpleado }, new { @class = "btn btn-primary btn-sm" })
+                                        </td>
+                                    }
                                 </tr>
                             }
                         </tbody>

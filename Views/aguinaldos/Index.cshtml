@@ -2,6 +2,8 @@
 
 @{
     ViewBag.Title = "Index";
+    DataBase_RH_BanderaBlanca.Models.Persona user = new DataBase_RH_BanderaBlanca.Models.Persona();
+    user = (DataBase_RH_BanderaBlanca.Models.Persona)Session["user"];
 }
 
 <div class="row">
@@ -18,8 +20,10 @@
                     @using (Html.BeginForm("PagarAguinaldos", "aguinaldos", FormMethod.Post))
                     {
                         @Html.AntiForgeryToken()
-                <button type="submit" class="btn btn-success">Generar Aguinaldos</button>
-
+                        if (user.ObtenerIdsDeAccesos(user.listaAccesos).Contains(8)) // Solo muestra los botones si el idEstado es 3
+                        {
+                            <button type="submit" class="btn btn-success">Generar Aguinaldos</button>
+                        }
                     }
                 </div>
 
@@ -47,6 +51,31 @@
                                     <td>@Html.DisplayFor(modelItem => item.aguinaldo.Monto_Aguinaldo)</td>
                                     <td>@Html.DisplayFor(modelItem => item.aguinaldo.catalogo_aguinaldo.Descripcion)</td>
                                     <td>@Html.DisplayFor(modelItem => item.aguinaldo.estados_solicitudes.Estados_Solicitud)</td>
+                                    @if ((item.aguinaldo.idEstados_Solicitudes != 1 && item.aguinaldo.idEstados_Solicitudes != 2) && user.ObtenerIdsDeAccesos(user.listaAccesos).Contains(6)) // Solo muestra los botones si el idEstado es 3
+                                    {
+                                        <!-- Botón para aprobar -->
+                                        using (Html.BeginForm("UpdateEstado", "Aguinaldos", FormMethod.Post))
+                                        {
+                                            @Html.Hidden("id", item.aguinaldo.FechaAguinaldo) <!-- Id del registro de la liquidación -->
+                                            @Html.Hidden("estado", 1) <!-- Estado 1 para aprobado -->
+                                            @Html.Hidden("idEmpleado", item.aguinaldo.Empleados_idEmpleado)
+                                            <td><button type="submit" class="btn btn-success">Aprobar</button></td>
+                                        }
+
+                                        <!-- Botón para rechazar -->
+                                        using (Html.BeginForm("UpdateEstado", "Aguinaldos", FormMethod.Post))
+                                        {
+                                            @Html.Hidden("id", item.aguinaldo.FechaAguinaldo)
+                                            @Html.Hidden("estado", 2) <!-- Estado 2 para rechazado -->
+                                            @Html.Hidden("idEmpleado", item.aguinaldo.Empleados_idEmpleado)
+                                            <td><button type="submit" class="btn btn-danger">Rechazar</button></td>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td>Accion no disponible</td>
+
+                                    }
                                 </tr>
                             }
                         </tbody>

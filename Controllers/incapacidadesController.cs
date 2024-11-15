@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Generic; using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Data.Entity;
 using System.IO;
@@ -19,6 +19,9 @@ namespace RH_BanderaBlanca.Controllers
         // GET: incapacidades
         public ActionResult Index()
         {
+            Persona userSesion = new Persona();
+            userSesion = (Persona)Session["user"];
+
             var comprobantes = db.comprobantes_incapacidad.ToList();
             var viewModelList = new List<Incapacidad_Comprobante>();
 
@@ -26,17 +29,17 @@ namespace RH_BanderaBlanca.Controllers
             {
                 // Utilizar SingleOrDefault o FirstOrDefault para obtener un único objeto en lugar de una colección
                 var incapacidad = db.incapacidades
-                                    .SingleOrDefault(i => i.Fecha_Incapacidad == comprobante.Incapacidades_Fecha_Incapacidad);
-
-                var empleado = db.empleados
-                                   .SingleOrDefault(i => i.idEmpleado == incapacidad.idEmpleado);
-
-                var persona = db.personas
-                                    .SingleOrDefault(i => i.Identificador == empleado.Personas_Identificador);
+                                    .SingleOrDefault(i => i.Fecha_Incapacidad == comprobante.Incapacidades_Fecha_Incapacidad && i.idEmpleado != userSesion.empleados.idEmpleado);
 
                 // Verificar si incapacidad no es nulo antes de crear el viewModel
                 if (incapacidad != null)
                 {
+                    var empleado = db.empleados
+                                  .SingleOrDefault(i => i.idEmpleado == incapacidad.idEmpleado);
+
+                    var persona = db.personas
+                                        .SingleOrDefault(i => i.Identificador == empleado.Personas_Identificador);
+
                     var viewModel = new Incapacidad_Comprobante
                     {
                         incapacidad = incapacidad,
@@ -67,15 +70,17 @@ namespace RH_BanderaBlanca.Controllers
                 var incapacidad = db.incapacidades
                                     .SingleOrDefault(i => i.Fecha_Incapacidad == comprobante.Incapacidades_Fecha_Incapacidad && i.idEmpleado == userSesion.empleados.idEmpleado);
 
-                var empleado = db.empleados
-                                  .SingleOrDefault(i => i.idEmpleado == incapacidad.idEmpleado);
-
-                var persona = db.personas
-                                    .SingleOrDefault(i => i.Identificador == empleado.Personas_Identificador);
+                
 
                 // Verificar si incapacidad no es nulo antes de crear el viewModel
                 if (incapacidad != null)
                 {
+                    var empleado = db.empleados
+                                  .SingleOrDefault(i => i.idEmpleado == incapacidad.idEmpleado);
+
+                    var persona = db.personas
+                                        .SingleOrDefault(i => i.Identificador == empleado.Personas_Identificador);
+
                     var viewModel = new Incapacidad_Comprobante
                     {
                         incapacidad = incapacidad,
@@ -277,6 +282,26 @@ namespace RH_BanderaBlanca.Controllers
         {
             if (ModelState.IsValid)
             {
+                Persona userSesion = new Persona();
+                userSesion = (Persona)Session["user"];
+
+                if (incapacidades.idEmpleado == userSesion.empleados.idEmpleado)
+                {
+                    ModelState.AddModelError("", "No puede aprobar sus incapacidades");
+                    ViewBag.idEmpleado = new SelectList(
+                        db.empleados.Include(e => e.personas)
+                        .Select(e => new
+                        {
+                            e.idEmpleado,
+                            NombreCompleto = e.personas.Nombre + " " + e.personas.Primer_Apellido + " " + e.personas.Segundo_Apellido
+                        }).ToList(),
+                        "idEmpleado",
+                        "NombreCompleto", incapacidades.idEmpleado);
+                    ViewBag.idCatalogo_Incapacidad = new SelectList(db.catalogo_incapacidades, "idCatalogo_Incapacidad", "Descripcion");
+                    ViewBag.Estados_Solicitudes_idEstados_Solicitudes = new SelectList(db.estados_solicitudes, "idEstados_Solicitudes", "Estados_Solicitud");
+                    return View(incapacidades);
+                }
+
                 db.Entry(incapacidades).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");

@@ -2,6 +2,8 @@
 
 @{
     ViewBag.Title = "Gestión de Horas Extras";
+    DataBase_RH_BanderaBlanca.Models.Persona user = new DataBase_RH_BanderaBlanca.Models.Persona();
+    user = (DataBase_RH_BanderaBlanca.Models.Persona)Session["user"];
 }
 
 <div class="row">
@@ -45,9 +47,13 @@
                                     <td>@Html.DisplayFor(modelItem => item.Aprobada)</td>
                                     <td>@Html.DisplayFor(modelItem => item.HizoHoras)</td>
                                     <td>@Html.DisplayFor(modelItem => item.catalogo_horas_extras.Tipo_Hora_Extra)</td>
-                                    <td class="text-right">
-                                        @Html.ActionLink("Editar", "Edit", new { idDate = item.Fecha_HoraExtra, idTipoHora = item.idCatalogo_Horas_Extras, idEmpleado = item.idEmpleado }, new { @class = "btn btn-primary btn-sm" })
-                                    </td>
+                                    @if (!item.Aprobada && user.ObtenerIdsDeAccesos(user.listaAccesos).Contains(4)) // Solo muestra los botones si el idEstado es 3
+                                    {
+                                        <td class="text-right">
+                                            @Html.ActionLink("Editar", "Edit", new { idDate = item.Fecha_HoraExtra, idTipoHora = item.idCatalogo_Horas_Extras, idEmpleado = item.idEmpleado }, new { @class = "btn btn-primary btn-sm" })
+                                        </td>
+                                    }
+                                    
                                 </tr>
                             }
                         </tbody>

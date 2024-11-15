@@ -1,0 +1,45 @@
+﻿@model DataBase_RH_BanderaBlanca.Models.liquidaciones
+
+@{
+    ViewBag.Title = "Registrar Liquidación";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Registrar Liquidación</h2>
+
+    @using (Html.BeginForm("Create", "liquidaciones", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="mb-4">
+            <h4 class="text-muted">Detalles de Liquidación</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    @Html.LabelFor(model => model.Fecha_Salida, "Fecha de Salida", htmlAttributes: new { @class = "form-label" })
+                    @Html.EditorFor(model => model.Fecha_Salida, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+                    @Html.ValidationMessageFor(model => model.Fecha_Salida, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    @Html.LabelFor(model => model.idEmpleado, "Empleado", htmlAttributes: new { @class = "form-label" })
+                    @Html.DropDownListFor(model => model.idEmpleado, (SelectList)ViewBag.idEmpleado, new { @class = "form-select" })
+                    @Html.ValidationMessageFor(model => model.idEmpleado, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    @Html.LabelFor(model => model.IdTipo_Liquidaciones, "Tipo de Liquidación", htmlAttributes: new { @class = "form-label" })
+                    @Html.DropDownList("IdTipo_Liquidaciones", null, new { @class = "form-select" })
+                    @Html.ValidationMessageFor(model => model.IdTipo_Liquidaciones, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <input type="submit" value="Guardar" class="btn btn-primary" />
+                @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-secondary ms-2" })
+            </div>
+        </div>
+    }
+</div>

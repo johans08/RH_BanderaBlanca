@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Generic; using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
@@ -17,7 +17,10 @@ namespace RH_BanderaBlanca.Controllers
         // GET: vacaciones
         public ActionResult Index()
         {
-            var vacaciones = db.vacaciones.Include(v => v.estados_solicitudes);
+            Persona userSesion = new Persona();
+            userSesion = (Persona)Session["user"];
+
+            var vacaciones = db.vacaciones.Where(p => p.idEmpleado != userSesion.empleados.idEmpleado).Include(v => v.estados_solicitudes);
             return View(vacaciones.ToList());
         }
 
@@ -102,7 +105,7 @@ namespace RH_BanderaBlanca.Controllers
                 // Actualizar las vacaciones disponibles si hay una discrepancia
                 if (cantidadDiasDisponibles != _vacacionPersonal.Vacaciones_Disponibles)
                 {
-                    _vacacionPersonal.Vacaciones_Disponibles = _vacacionPersonal.Vacaciones_Disponibles;
+                    _vacacionPersonal.Vacaciones_Disponibles = cantidadDiasDisponibles;
                     db.Entry(_vacacionPersonal).State = EntityState.Modified;
                     db.SaveChanges();
                 }

@@ -2,6 +2,8 @@
 
 @{
     ViewBag.Title = "Index";
+    DataBase_RH_BanderaBlanca.Models.Persona user = new DataBase_RH_BanderaBlanca.Models.Persona();
+    user = (DataBase_RH_BanderaBlanca.Models.Persona)Session["user"];
 }
 
 <div class="row">
@@ -21,6 +23,7 @@
                     <table class="table my-0 table-hover">
                         <thead class="thead-light">
                             <tr>
+                                <th>Empleado</th>
                                 <th>@Html.DisplayNameFor(model => model.Cantidad_Dias)</th>
                                 <th>@Html.DisplayNameFor(model => model.Fecha_Solicitud)</th>
                                 <th>@Html.DisplayNameFor(model => model.Observacion)</th>
@@ -32,13 +35,24 @@
                             @foreach (var item in Model)
                             {
                                 <tr>
+                                    <td>@Html.DisplayFor(modelItem => item.idEmpleado)</td>
                                     <td>@Html.DisplayFor(modelItem => item.Cantidad_Dias)</td>
                                     <td>@Html.DisplayFor(modelItem => item.Fecha_Solicitud)</td>
                                     <td>@Html.DisplayFor(modelItem => item.Observacion)</td>
                                     <td>@Html.DisplayFor(modelItem => item.estados_solicitudes.Estados_Solicitud)</td>
-                                    <td class="text-right">
-                                        @Html.ActionLink("Editar", "Edit", new { date = item.Fecha_Inicio, idEmpleado = item.idEmpleado }, new { @class = "btn btn-primary btn-sm" })
-                                    </td>
+                                    @if ((item.estados_solicitudes.idEstados_Solicitudes == 3) && user.ObtenerIdsDeAccesos(user.listaAccesos).Contains(4)) // Solo muestra los botones si el idEstado es 3
+                                    {
+                                        <td class="text-right">
+                                            @Html.ActionLink("Editar", "Edit", new { date = item.Fecha_Inicio, idEmpleado = item.idEmpleado }, new { @class = "btn btn-primary btn-sm" })
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-right">
+                                           Accion no disponible
+                                        </td>
+                                    }
+
                                 </tr>
                             }
                         </tbody>

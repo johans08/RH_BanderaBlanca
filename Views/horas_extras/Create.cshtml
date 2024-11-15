@@ -1,51 +1,45 @@
 ﻿@model DataBase_RH_BanderaBlanca.Models.horas_extras
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Registrar Horas Extra";
 }
 
-<h2>Create</h2>
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Registrar Horas Extra</h2>
 
-@using (Html.BeginForm()) 
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>horas_extras</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.Fecha_HoraExtra, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Fecha_HoraExtra, new { htmlAttributes = new { @class = "form-control", type = "date" } })
-                @Html.ValidationMessageFor(model => model.Fecha_HoraExtra, "", new { @class = "text-danger" })
+    @using (Html.BeginForm("Create", "horasExtras", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="mb-4">
+            <h4 class="text-muted">Detalles de Horas Extra</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    @Html.LabelFor(model => model.Fecha_HoraExtra, "Fecha", htmlAttributes: new { @class = "form-label" })
+                    @Html.EditorFor(model => model.Fecha_HoraExtra, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+                    @Html.ValidationMessageFor(model => model.Fecha_HoraExtra, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    @Html.LabelFor(model => model.Cantidad_Horas, "Cantidad de Horas", htmlAttributes: new { @class = "form-label" })
+                    @Html.EditorFor(model => model.Cantidad_Horas, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Cantidad_Horas, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="col-md-12 mb-3">
+                    @Html.LabelFor(model => model.Detalle_Hora_Extra, "Detalle de Horas Extra", htmlAttributes: new { @class = "form-label" })
+                    @Html.EditorFor(model => model.Detalle_Hora_Extra, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Detalle_Hora_Extra, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <input type="submit" value="Guardar" class="btn btn-primary" />
+                @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-secondary ms-2" })
             </div>
         </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Cantidad_Horas, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Cantidad_Horas, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Cantidad_Horas, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Detalle_Hora_Extra, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Detalle_Hora_Extra, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Detalle_Hora_Extra, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </div>
-    </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
+    }
 </div>

@@ -107,7 +107,14 @@
 
     <script>
     $(document).ready(function () {
-        $('#errorModal').modal('show');
+        var qrCodeImage = "@ViewBag.QrCodeImage";
+        var usuario = "@ViewBag.Usuario";
+        var contrasena = "@ViewBag.Contrasena";
+
+        if (qrCodeImage && usuario && contrasena) {
+            // Mostrar el modal si los valores están presentes
+            $('#errorModal').modal('show');
+        }
 
         // Descargar como imagen
         $('#downloadImage').click(function () {
