@@ -95,22 +95,6 @@ namespace RH_BanderaBlanca.Controllers
             return View(_horas_extras);
         }
 
-        // GET: horas_extras/Edit/5
-        public ActionResult Edit(DateTime idDate, int idTipoHora, int idEmpleado)
-        {
-            if (idDate == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            horas_extras horasextra = db.horas_extras.FirstOrDefault(c => c.Fecha_HoraExtra == idDate && c.idCatalogo_Horas_Extras == idTipoHora && c.idEmpleado == idEmpleado);
-            if (horasextra == null)
-            {
-                return HttpNotFound();
-            }
-            CargarViewBags(horasextra);
-            return View(horasextra);
-        }
-
         // POST: horas_extras/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
@@ -127,6 +111,24 @@ namespace RH_BanderaBlanca.Controllers
             CargarViewBags(horas_extras);
             return View(horas_extras);
         }
+
+        // GET: horas_extras/Edit/5
+        public ActionResult Edit(DateTime idDate, int idTipoHora, int idEmpleado)
+        {
+            if (idDate == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            horas_extras horasextra = db.horas_extras.FirstOrDefault(c => c.Fecha_HoraExtra == idDate && c.idCatalogo_Horas_Extras == idTipoHora && c.idEmpleado == idEmpleado);
+            if (horasextra == null)
+            {
+                return HttpNotFound();
+            }
+            CargarViewBags(horasextra);
+            return View(horasextra);
+        }
+
+        
 
         // GET: horas_extras/Delete/5
         public ActionResult Delete(DateTime id)
