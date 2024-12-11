@@ -17,14 +17,32 @@
             <div class="container mt-5 pb-5">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2 class="mb-0">Aguinaldos</h2>
-                    @using (Html.BeginForm("PagarAguinaldos", "aguinaldos", FormMethod.Post))
-                    {
-                        @Html.AntiForgeryToken()
-                        if (user.ObtenerIdsDeAccesos(user.listaAccesos).Contains(8)) // Solo muestra los botones si el idEstado es 3
+                    <div class="ml-auto d-flex">
+                        @using (Html.BeginForm("PagarAguinaldos", "aguinaldos", FormMethod.Post))
                         {
-                            <button type="submit" class="btn btn-success">Generar Aguinaldos</button>
+                            @Html.AntiForgeryToken()
+                            if (user.ObtenerIdsDeAccesos(user.listaAccesos).Contains(8)) // Solo muestra los botones si el idEstado es 3
+                            {
+                                <button type="submit" class="btn btn-primary m-2">Generar Aguinaldos</button>
+                            }
                         }
-                    }
+                        @using (Html.BeginForm("RegenerarAguinaldos", "aguinaldos", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            if (user.ObtenerIdsDeAccesos(user.listaAccesos).Contains(8)) // Solo muestra los botones si el idEstado es 3
+                            {
+                    <button type="submit" class="btn btn-warning m-2">Recalcular Aguinaldos</button>
+                            }
+                        }
+                        @using (Html.BeginForm("AprobarAguinaldos", "aguinaldos", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            if (user.ObtenerIdsDeAccesos(user.listaAccesos).Contains(6)) // Solo muestra los botones si el idEstado es 3
+                            {
+                    <button type="submit" class="btn btn-success m-2">Aprobar Aguinaldos</button>
+                            }
+                        }
+                    </div>
                 </div>
 
                 <div class="table-responsive">
@@ -50,32 +68,21 @@
                                     <td>@Html.DisplayFor(modelItem => item.aguinaldo.Fecha_Final_Cobro)</td>
                                     <td>@Html.DisplayFor(modelItem => item.aguinaldo.Monto_Aguinaldo)</td>
                                     <td>@Html.DisplayFor(modelItem => item.aguinaldo.catalogo_aguinaldo.Descripcion)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.aguinaldo.estados_solicitudes.Estados_Solicitud)</td>
-                                    @if ((item.aguinaldo.idEstados_Solicitudes != 1 && item.aguinaldo.idEstados_Solicitudes != 2) && user.ObtenerIdsDeAccesos(user.listaAccesos).Contains(6)) // Solo muestra los botones si el idEstado es 3
-                                    {
-                                        <!-- Botón para aprobar -->
-                                        using (Html.BeginForm("UpdateEstado", "Aguinaldos", FormMethod.Post))
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.aguinaldo.estados_solicitudes.Estados_Solicitud)
+                                        @if (item.aguinaldo.idEstados_Solicitudes == 4)
                                         {
-                                            @Html.Hidden("id", item.aguinaldo.FechaAguinaldo) <!-- Id del registro de la liquidación -->
-                                            @Html.Hidden("estado", 1) <!-- Estado 1 para aprobado -->
-                                            @Html.Hidden("idEmpleado", item.aguinaldo.Empleados_idEmpleado)
-                                            <td><button type="submit" class="btn btn-success">Aprobar</button></td>
+                                            <span class="text-success ms-2">
+                                                <i class="bi bi-check"></i>
+                                            </span>
                                         }
-
-                                        <!-- Botón para rechazar -->
-                                        using (Html.BeginForm("UpdateEstado", "Aguinaldos", FormMethod.Post))
+                                        @if (item.aguinaldo.idEstados_Solicitudes == 5)
                                         {
-                                            @Html.Hidden("id", item.aguinaldo.FechaAguinaldo)
-                                            @Html.Hidden("estado", 2) <!-- Estado 2 para rechazado -->
-                                            @Html.Hidden("idEmpleado", item.aguinaldo.Empleados_idEmpleado)
-                                            <td><button type="submit" class="btn btn-danger">Rechazar</button></td>
+                                            <span class="text-danger ms-2">
+                                                <i class="bi bi-exclamation-triangle"></i>
+                                            </span>
                                         }
-                                    }
-                                    else
-                                    {
-                                        <td>Accion no disponible</td>
-
-                                    }
+                                    </td>
                                 </tr>
                             }
                         </tbody>

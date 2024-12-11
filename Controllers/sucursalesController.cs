@@ -17,30 +17,38 @@ namespace RH_BanderaBlanca.Controllers
         // GET: sucursales
         public ActionResult Index()
         {
-            var sucursales = db.sucursales
-            .Include(p => p.telefonos_sucursales) // Incluir la relación con telefonos
-            .Include(p => p.direcciones_empresas) // Incluir la relación con direcciones
-            .ToList();
-
             var viewModelList = new List<Sucursal>();
-
-            foreach (var sucursal in sucursales)
+            try
             {
-                var direccion = sucursal.direcciones_empresas.FirstOrDefault();
-                var telefono = sucursal.telefonos_sucursales.FirstOrDefault();
+                var sucursales = db.sucursales
+                .Include(p => p.telefonos_sucursales) // Incluir la relación con telefonos
+                .Include(p => p.direcciones_empresas) // Incluir la relación con direcciones
+                .ToList();
 
-                var viewModel = new Sucursal
+                
+
+                foreach (var sucursal in sucursales)
                 {
-                    sucursales = sucursal,
-                    telefonos = telefono,
-                    direcciones_Empresas = direccion
-                };
+                    var direccion = sucursal.direcciones_empresas.FirstOrDefault();
+                    var telefono = sucursal.telefonos_sucursales.FirstOrDefault();
 
-                viewModelList.Add(viewModel);
+                    var viewModel = new Sucursal
+                    {
+                        sucursales = sucursal,
+                        telefonos = telefono,
+                        direcciones_Empresas = direccion
+                    };
+
+                    viewModelList.Add(viewModel);
+                }
+
+                return View(viewModelList);
             }
-
-
-            return View(viewModelList);
+            catch (Exception)
+            {
+                return View(viewModelList);
+            }
+            
 
         }
 

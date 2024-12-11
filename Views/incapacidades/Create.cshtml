@@ -16,43 +16,69 @@
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    @Html.LabelFor(model => model.incapacidad.Fecha_Incapacidad, "Fecha de Inicio", htmlAttributes: new { @class = "form-label" })
-                    @Html.EditorFor(model => model.incapacidad.Fecha_Incapacidad, new { htmlAttributes = new { @class = "form-control", type = "date" } })
-                    @Html.ValidationMessageFor(model => model.incapacidad.Fecha_Incapacidad, "", new { @class = "text-danger" })
-                </div>
+        <div class="row">
 
-                <div class="col-md-6 mb-3">
-                    @Html.LabelFor(model => model.incapacidad.Fecha_Final_Incapacidad, "Fecha Final", htmlAttributes: new { @class = "form-label" })
-                    @Html.EditorFor(model => model.incapacidad.Fecha_Final_Incapacidad, new { htmlAttributes = new { @class = "form-control", type = "date" } })
-                    @Html.ValidationMessageFor(model => model.incapacidad.Fecha_Final_Incapacidad, "", new { @class = "text-danger" })
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    @Html.LabelFor(model => model.incapacidad.idCatalogo_Incapacidad, "Tipo de Incapacidad", htmlAttributes: new { @class = "form-label" })
-                    @Html.DropDownListFor(model => model.incapacidad.idCatalogo_Incapacidad, (SelectList)ViewBag.idCatalogo_Incapacidad, new { @class = "form-select" })
-                    @Html.ValidationMessageFor(model => model.incapacidad.idCatalogo_Incapacidad, "", new { @class = "text-danger" })
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    @Html.LabelFor(model => model.incapacidad.Detalle_Incapacidad, "Detalles", htmlAttributes: new { @class = "form-label" })
-                    @Html.EditorFor(model => model.incapacidad.Detalle_Incapacidad, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.incapacidad.Detalle_Incapacidad, "", new { @class = "text-danger" })
-                </div>
-
-                <!-- Campo de archivo en una columna completa -->
-                <div class="col-md-12 mb-3">
-                    @Html.LabelFor(model => model.comprobantes.Imagen_Comprobante, "Imagen Comprobante", htmlAttributes: new { @class = "form-label" })
-                    <input type="file" class="form-control" name="fileUpload" accept="image/png, image/gif, image/jpeg" />
-                    @Html.ValidationMessageFor(model => model.comprobantes.Imagen_Comprobante, "", new { @class = "text-danger" })
-                </div>
+            <div class="col-md-6 mb-3">
+                @Html.LabelFor(model => model.incapacidad.Fecha_Incapacidad, "Fecha de Inicio", htmlAttributes: new { @class = "form-label" })
+                @Html.EditorFor(model => model.incapacidad.Fecha_Incapacidad, new { htmlAttributes = new { @class = "form-control", type = "date", id = "fechaInicio", min = DateTime.Today.ToString("yyyy-MM-dd") } })
+                @Html.ValidationMessageFor(model => model.incapacidad.Fecha_Incapacidad, "", new { @class = "text-danger" })
             </div>
+
+            <div class="col-md-6 mb-3">
+                @Html.LabelFor(model => model.incapacidad.Fecha_Final_Incapacidad, "Fecha Final", htmlAttributes: new { @class = "form-label" })
+                @Html.EditorFor(model => model.incapacidad.Fecha_Final_Incapacidad, new { htmlAttributes = new { @class = "form-control", type = "date", id = "fechaFinal", min = DateTime.Today.ToString("yyyy-MM-dd") } })
+                @Html.ValidationMessageFor(model => model.incapacidad.Fecha_Final_Incapacidad, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="col-md-6 mb-3">
+                @Html.LabelFor(model => model.incapacidad.idCatalogo_Incapacidad, "Tipo de Incapacidad", htmlAttributes: new { @class = "form-label" })
+                @Html.DropDownListFor(model => model.incapacidad.idCatalogo_Incapacidad, (SelectList)ViewBag.idCatalogo_Incapacidad, new { @class = "form-select" })
+                @Html.ValidationMessageFor(model => model.incapacidad.idCatalogo_Incapacidad, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="col-md-6 mb-3">
+                @Html.LabelFor(model => model.incapacidad.Detalle_Incapacidad, "Detalles", htmlAttributes: new { @class = "form-label" })
+                @Html.EditorFor(model => model.incapacidad.Detalle_Incapacidad, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.incapacidad.Detalle_Incapacidad, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="col-md-6 mb-3">
+                @Html.LabelFor(model => model.incapacidad.Numero_Boleta, "Número de Boleta", htmlAttributes: new { @class = "form-label" })
+                @Html.EditorFor(model => model.incapacidad.Numero_Boleta, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.incapacidad.Numero_Boleta, "", new { @class = "text-danger" })
+            </div>
+
+            <!-- Campo de archivo en una columna completa -->
+            <div class="col-md-6 mb-3">
+                @Html.LabelFor(model => model.comprobantes.Imagen_Comprobante, "Imagen Comprobante", htmlAttributes: new { @class = "form-label" })
+                <input type="file" class="form-control" name="fileUpload" accept="image/png, image/gif, image/jpeg" />
+                @Html.ValidationMessageFor(model => model.comprobantes.Imagen_Comprobante, "", new { @class = "text-danger" })
+            </div>
+        </div>
 
             <div class="d-flex justify-content-end">
                 <input type="submit" value="Guardar" class="btn btn-primary" />
-                @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-secondary ms-2" })
+                @Html.ActionLink("Cancelar", "Gestion", null, new { @class = "btn btn-secondary ms-2" })
             </div>
         </div>
     }
 </div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        document.getElementById("fechaInicio").addEventListener("change", function () {
+            var fechaInicio = this.value;
+            var fechaFinal = document.getElementById("fechaFinal");
+
+            // Establecer el mínimo de la fecha final basado en la fecha de inicio seleccionada
+            fechaFinal.min = fechaInicio;
+
+            // Si la fecha final actual es menor que la nueva mínima, se reinicia
+            if (fechaFinal.value < fechaInicio) {
+                fechaFinal.value = fechaInicio;
+            }
+        });
+    </script>
+}

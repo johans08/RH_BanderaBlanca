@@ -30,6 +30,7 @@
                                 <th>@Html.DisplayNameFor(model => model.personas.Primer_Apellido)</th>
                                 <th>@Html.DisplayNameFor(model => model.personas.Segundo_Apellido)</th>
                                 <th>@Html.DisplayNameFor(model => model.personas.Fecha_Nacimiento)</th>
+                                <th>Nombre de Usuario </th>
                                 <th>@Html.DisplayNameFor(model => model.empleados.puestos_laborales.Nombre_Puesto)</th>
                                 <th>@Html.DisplayNameFor(model => model.correos.Direccion_Correo)</th>
                                 <th class="text-right">Acciones</th>
@@ -44,8 +45,19 @@
                                     <td>@Html.DisplayFor(modelItem => item.personas.Primer_Apellido)</td>
                                     <td>@Html.DisplayFor(modelItem => item.personas.Segundo_Apellido)</td>
                                     <td>@Html.DisplayFor(modelItem => item.personas.Fecha_Nacimiento)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.usuarios.Nombre_Usuario)</td>
                                     <td>@Html.DisplayFor(modelItem => item.empleados.puestos_laborales.Nombre_Puesto)</td>
                                     <td>@Html.DisplayFor(modelItem => item.correos.Direccion_Correo)</td>
+                                    <td>
+                                        <button id="GenerarCodigo" type="button" class="btn btn-info rounded-circle"
+                                                data-id="@item.personas.Identificador"
+                                                data-username="@item.personas.Nombre @item.personas.Primer_Apellido"
+                                                data-departamento="@item.empleados.puestos_laborales.Nombre_Puesto"
+                                                onclick="mostrarQR(this)">
+                                            <i class="bi bi-qr-code"></i>
+                                        </button>
+                                    </td>
+
                                 </tr>
                             }
                         </tbody>
@@ -59,66 +71,100 @@
 
 
 <!-- Modal -->
+<!-- Modal -->
 <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="errorModalLabel">Credenciales de Usuario</h5>
+                <h5 class="modal-title" id="errorModalLabel">Gafete de Usuario</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body" id="modalContent">
-                <div class="row">
-                    <div class="col-md-6 text-center">
-                        @if (ViewBag.QrCodeImage != null)
-                        {
-                            <img src="@ViewBag.QrCodeImage" alt="Código QR" class="img-fluid" style="max-width: 80%; height: auto;" />
-                        }
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            @if (ViewBag.Usuario != null)
-                            {
-                                <label for="usuario" class="form-label">Usuario:</label>
-                                <input type="text" class="form-control" id="usuario" value="@ViewBag.Usuario" readonly />
-                            }
-
-                        </div>
-                        <div class="mb-3">
-                            @if (ViewBag.Contrasena != null)
-                            {
-                                <label for="contrasena" class="form-label">Contraseña:</label>
-                                <input type="text" class="form-control" id="contrasena" value="@ViewBag.Contrasena" readonly />
-                            }
-                        </div>
-                    </div>
+            <div class="modal-body text-center">
+                <!-- Contenedor del gafete -->
+                <div class="border p-3" style="background-color: #f8f9fa; border-radius: 8px;">
+                    <!-- Código QR -->
+                    @if (ViewBag.QrCodeImage != null)
+                    {
+                        <img src="@ViewBag.QrCodeImage" alt="Código QR" class="img-fluid" style="max-width: 200px; height: auto; margin-bottom: 10px;" />
+                    }
+                    <!-- Nombre del Usuario -->
+                    @if (ViewBag.Usuario != null)
+                    {
+                        <h5 class="mt-2">@ViewBag.Usuario</h5>
+                    }
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                 <button id="downloadImage" class="btn btn-primary">Descargar como Imagen</button>
-                <button id="sendEmail" class="btn btn-success">Enviar por Correo</button> <!-- Botón para enviar por correo -->
             </div>
         </div>
     </div>
 </div>
 
+<div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="qrModalLabel">Credencial de Acceso</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="qrImage" src="" alt="Código QR" style="max-width: 100%; height: auto;">
+                <h5 id="NombreUsuario" class="mt-2"></h5>
+                <h5 id="Departamento" class="mt-2"></h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.8/dist/html-to-image.min.js"></script>
+
+    <script>
+        function mostrarQR(button) {
+            const identificador = $(button).data('id');
+            const nombreUsuario = $(button).data('username'); // Obtener el nombre de usuario
+            const departamento = $(button).data('departamento'); // Obtener el nombre de usuario
+            // Mostrar el nombre de usuario en el modal
+            $('#NombreUsuario').text(nombreUsuario);
+            $('#Departamento').text(departamento);
+            // Realiza la llamada AJAX
+            $.ajax({
+                url: '../personas/GenerarQR',
+                type: 'POST',
+                data: { identificador: identificador },
+                success: function (response) {
+                    if (response.success) {
+                        // Inserta el código QR en el modal
+                        $('#qrImage').attr('src', 'data:image/png;base64,' + response.qrCode);
+                        $('#qrModal').modal('show');
+                    } else {
+                        alert("No se pudo generar el código QR.");
+                    }
+                },
+                error: function () {
+                    alert("Error al comunicarse con el servidor.");
+                }
+            });
+        }
+    </script>
+
 
     <script>
     $(document).ready(function () {
         var qrCodeImage = "@ViewBag.QrCodeImage";
         var usuario = "@ViewBag.Usuario";
-        var contrasena = "@ViewBag.Contrasena";
 
-        if (qrCodeImage && usuario && contrasena) {
+        if (qrCodeImage && usuario) {
             // Mostrar el modal si los valores están presentes
             $('#errorModal').modal('show');
         }
 
         // Descargar como imagen
         $('#downloadImage').click(function () {
-            console.log("Descargar imagen clickeado");
             htmlToImage.toPng(document.getElementById('modalContent'))
                 .then(function (dataUrl) {
                     let link = document.createElement('a');
@@ -131,31 +177,6 @@
                 });
         });
 
-        // Enviar la imagen por correo
-        $('#sendEmail').click(function () {
-            console.log("Enviar Correo clickeado");
-            htmlToImage.toPng(document.getElementById('modalContent'))
-                .then(function (dataUrl) {
-                    $.ajax({
-                        type: 'POST',
-                        url: '@Url.Action("EnviarEmail", "Email")',
-                        data: {
-                            image: dataUrl,
-                            usuario: $('#usuario').val(),
-                            contrasena: $('#contrasena').val()
-                        },
-                        success: function (response) {
-                            alert('Correo enviado exitosamente');
-                        },
-                        error: function (error) {
-                            alert('Error al enviar el correo');
-                        }
-                    });
-                })
-                .catch(function (error) {
-                    console.error('Error al capturar la imagen para correo:', error);
-                });
-        });
     });
     </script>
 

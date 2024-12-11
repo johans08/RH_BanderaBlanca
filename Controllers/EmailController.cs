@@ -27,8 +27,7 @@ namespace RH_BanderaBlanca.Controllers
                 string correoDestino = _persona.ObtenerCorreo(usuario);
 
                 // Decodificar la imagen de Base64
-                string base64Data = image.Substring("data:image/jpg;base64,".Length);
-                byte[] imageBytes = Convert.FromBase64String(base64Data);
+                byte[] imageBytes = Convert.FromBase64String(image);
 
                 // Guardar la imagen como archivo temporal
                 System.IO.File.WriteAllBytes(tempImagePath, imageBytes);

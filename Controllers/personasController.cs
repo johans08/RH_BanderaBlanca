@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Data.Entity;
+using System.Net.Http;
 
 
 namespace RH_BanderaBlanca.Controllers
@@ -31,6 +32,7 @@ namespace RH_BanderaBlanca.Controllers
                 var telefono = persona.telefonos_personales?.FirstOrDefault();
                 var correo = persona.correos?.FirstOrDefault();
                 var empleado = persona.empleados?.FirstOrDefault();
+                var usuario = db.usuarios.FirstOrDefault(u => u.idEmpleado.Equals(empleado.idEmpleado));
 
                 // Verificar si usuario, empleado y persona no son nulos antes de crear el viewModel
                 if (persona != null && persona.empleados != null)
@@ -41,7 +43,8 @@ namespace RH_BanderaBlanca.Controllers
                         personas = persona,
                         direcciones = direccion,
                         telefonos = telefono,
-                        correos = correo
+                        correos = correo,
+                        usuarios = usuario
                     };
 
                     viewModelList.Add(viewModel);
@@ -157,6 +160,33 @@ namespace RH_BanderaBlanca.Controllers
             return View(model);
         }
 
+        private bool EnviarEmail(string qr, string usuario, string contrasena)
+        {
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(Request.Url.GetLeftPart(UriPartial.Authority)); // Dirección base de tu servidor
+                var values = new Dictionary<string, string>
+        {
+            { "image", qr },
+            { "usuario", usuario },
+            { "contrasena", contrasena }
+        };
+
+                var content = new FormUrlEncodedContent(values);
+                try
+                {
+                    var response = client.PostAsync("/Email/EnviarEmail", content).Result; // Ruta al método EnviarEmail
+                    return response.IsSuccessStatusCode;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error al enviar el correo: {ex.Message}");
+                    return false;
+                }
+            }
+        }
+
+
         // POST: personas/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -177,6 +207,15 @@ namespace RH_BanderaBlanca.Controllers
                         TempData["QrCodeImage"] = "data:image/png;base64," + qr;
                         TempData["Usuario"] = usuario;
                         TempData["Contrasena"] = contrasena;
+                        string correoDestino = _persona.ObtenerCorreo(usuario);
+
+                        // Enviar el correo usando el controlador de Email
+                        bool emailEnviado = EnviarEmail(qr, usuario, contrasena);
+                        if (!emailEnviado)
+                        {
+                            TempData["Error"] = "La persona fue creada, pero hubo un error al enviar el correo.";
+                        }
+
                     }
                     else
                     {
@@ -199,6 +238,22 @@ namespace RH_BanderaBlanca.Controllers
 
                 return View(_persona);
             }
+        }
+
+        [HttpPost]
+        public JsonResult GenerarQR(long identificador)
+        {
+            Qr Qr = new Qr();
+            bool ok = false;
+            string qrRecibido = "";
+
+            (ok, qrRecibido) = Qr.GenerarQR(identificador);
+
+            if (ok)
+            {
+                return Json(new { success = true, qrCode = qrRecibido });
+            }
+            return Json(new { success = false });
         }
 
         private void CargarViewBags(Persona _persona)

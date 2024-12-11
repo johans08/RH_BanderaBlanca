@@ -16,70 +16,112 @@ namespace RH_BanderaBlanca.Controllers
 
         public ActionResult Index()
         {
-            var aguinaldos = db.aguinaldos.Include(a => a.catalogo_aguinaldo).Include(a => a.estados_solicitudes).ToList();
             var viewModelList = new List<Aguinaldo>();
 
-            foreach (var aguinaldo in aguinaldos)
+            try
             {
-                
+                Persona userSesion = new Persona();
+                userSesion = (Persona)Session["user"];
 
-                // Verificar si incapacidad no es nulo antes de crear el viewModel
-                if (aguinaldo != null)
+                var aguinaldos = db.aguinaldos.Include(a => a.catalogo_aguinaldo).Include(a => a.estados_solicitudes).ToList();
+
+
+                foreach (var aguinaldo in aguinaldos)
                 {
-                    var empleado = db.empleados
-                                   .SingleOrDefault(i => i.idEmpleado == aguinaldo.Empleados_idEmpleado);
 
-                    var persona = db.personas
-                                        .SingleOrDefault(i => i.Identificador == empleado.Personas_Identificador);
 
-                    var viewModel = new Aguinaldo
+                    // Verificar si incapacidad no es nulo antes de crear el viewModel
+                    if (aguinaldo != null)
                     {
-                        personas = persona,
-                        empleados = empleado,
-                        aguinaldo = aguinaldo
-                    };
+                        var empleado = db.empleados
+                                       .SingleOrDefault(i => i.idEmpleado == aguinaldo.Empleados_idEmpleado);
 
-                    viewModelList.Add(viewModel);
+                        var persona = db.personas
+                                            .SingleOrDefault(i => i.Identificador == empleado.Personas_Identificador);
+
+                        if (userSesion.ObtenerIdsDeAccesos(userSesion.listaAccesos).Contains(10))
+                        {
+                            var viewModel = new Aguinaldo
+                            {
+                                personas = persona,
+                                empleados = empleado,
+                                aguinaldo = aguinaldo
+                            };
+
+                            viewModelList.Add(viewModel);
+                        }
+                        else
+                        {
+                            if (empleado.idJefaturaDirecta == userSesion.empleados.idEmpleado)
+                            {
+                                var viewModel = new Aguinaldo
+                                {
+                                    personas = persona,
+                                    empleados = empleado,
+                                    aguinaldo = aguinaldo
+                                };
+
+                                viewModelList.Add(viewModel);
+                            }
+                        }
+
+                        
+                    }
                 }
-            }
 
-            return View(viewModelList);
+                return View(viewModelList);
+            }
+            catch (Exception)
+            {
+                return View(viewModelList);
+            }
+           
         }
 
         public ActionResult Gestion()
         {
-            Persona userSesion = new Persona();
-            userSesion = (Persona)Session["user"];
-
-            var aguinaldos = db.aguinaldos.Where(p => p.Empleados_idEmpleado.Equals(userSesion.empleados.idEmpleado)).Include(a => a.catalogo_aguinaldo).Include(a => a.estados_solicitudes).ToList();
             var viewModelList = new List<Aguinaldo>();
 
-            foreach (var aguinaldo in aguinaldos)
+            try
             {
-                
+                Persona userSesion = new Persona();
+                userSesion = (Persona)Session["user"];
 
-                // Verificar si incapacidad no es nulo antes de crear el viewModel
-                if (aguinaldo != null)
+                var aguinaldos = db.aguinaldos.Where(p => p.Empleados_idEmpleado.Equals(userSesion.empleados.idEmpleado)).Include(a => a.catalogo_aguinaldo).Include(a => a.estados_solicitudes).ToList();
+
+
+                foreach (var aguinaldo in aguinaldos)
                 {
 
-                    var empleado = db.empleados
-                                   .SingleOrDefault(i => i.idEmpleado == aguinaldo.Empleados_idEmpleado);
 
-                    var persona = db.personas
-                                        .SingleOrDefault(i => i.Identificador == empleado.Personas_Identificador);
-
-                    var viewModel = new Aguinaldo
+                    // Verificar si incapacidad no es nulo antes de crear el viewModel
+                    if (aguinaldo != null)
                     {
-                        personas = persona,
-                        empleados = empleado,
-                        aguinaldo = aguinaldo
-                    };
 
-                    viewModelList.Add(viewModel);
+                        var empleado = db.empleados
+                                       .SingleOrDefault(i => i.idEmpleado == aguinaldo.Empleados_idEmpleado);
+
+                        var persona = db.personas
+                                            .SingleOrDefault(i => i.Identificador == empleado.Personas_Identificador);
+
+                        var viewModel = new Aguinaldo
+                        {
+                            personas = persona,
+                            empleados = empleado,
+                            aguinaldo = aguinaldo
+                        };
+
+                        viewModelList.Add(viewModel);
+                    }
                 }
-            }
 
-            return View(viewModelList);
+                return View(viewModelList);
+            }
+            catch (Exception)
+            {
+                return View(viewModelList);
+            }
+            
         }
 
         public ActionResult UpdateEstado(DateTime id, int estado, int idEmpleado)
@@ -107,9 +149,21 @@ namespace RH_BanderaBlanca.Controllers
         public ActionResult RegenerarAguinaldos()
         {
             Aguinaldo aguinaldo = new Aguinaldo();
-            aguinaldo.GenerarAguinaldos();
+            aguinaldo.RecalcularAguinaldos();
 
             return RedirectToAction("Index");
+        }
+
+        public ActionResult AprobarAguinaldos()
+        {
+            Persona userSesion = (Persona)Session["user"];
+            int idJefaturaDirecta = userSesion.empleados.idEmpleado;
+
+            Aguinaldo aguinaldo = new Aguinaldo();
+            aguinaldo.AprobarAguinaldos(idJefaturaDirecta);
+
+            var planillas = db.planillas.Include(p => p.estados_solicitudes);
+            return RedirectToAction("Index", planillas.ToList());
         }
 
         protected override void Dispose(bool disposing)

@@ -17,15 +17,43 @@ namespace RH_BanderaBlanca.Controllers
         // GET: vacaciones
         public ActionResult Index()
         {
-            Persona userSesion = new Persona();
-            userSesion = (Persona)Session["user"];
+            var viewModelList = new List<Vacacion>();
+            try
+            {
+                Persona userSesion = new Persona();
+                userSesion = (Persona)Session["user"];
 
-            var vacaciones = db.vacaciones.Where(p => p.idEmpleado != userSesion.empleados.idEmpleado).Include(v => v.estados_solicitudes);
-            return View(vacaciones.ToList());
+
+                var vacaciones = db.vacaciones.Where(p => p.idEmpleado != userSesion.empleados.idEmpleado).Include(v => v.estados_solicitudes).ToList();
+
+                foreach (vacaciones vacacion in vacaciones)
+                {
+                    empleados empleado = db.empleados.FirstOrDefault(e => e.idEmpleado == vacacion.idEmpleado);
+                    personas persona = db.personas.FirstOrDefault(e => e.Identificador == empleado.Personas_Identificador);
+                    if (empleado.idJefaturaDirecta == userSesion.empleados.idEmpleado)
+                    {
+                        var viewModel = new Vacacion
+                        {
+                            empleados = empleado,
+                            personas = persona,
+                            vacaciones = vacacion
+                        };
+
+                        viewModelList.Add(viewModel);
+                    }
+
+                }
+                return View(viewModelList);
+            }
+            catch (Exception)
+            {
+                return View(viewModelList);
+            }
         }
 
         public ActionResult Gestion()
         {
+            var viewModelList = new List<Vacacion>();
             try
             {
                 Persona userSesion = (Persona)Session["user"];
@@ -34,23 +62,34 @@ namespace RH_BanderaBlanca.Controllers
                     throw new Exception("User session or employee is null.");
                 }
 
-                var vacacions = db.vacaciones.Include(v => v.estados_solicitudes).Where(i => i.idEmpleado == userSesion.empleados.idEmpleado).ToList();
+                var vacaciones = db.vacaciones.Include(v => v.estados_solicitudes).Where(i => i.idEmpleado == userSesion.empleados.idEmpleado).ToList();
 
-                if (vacacions == null || !vacacions.Any())
+                if (vacaciones == null || !vacaciones.Any())
                 {
-                    vacacions = new List<vacaciones>();
+                    vacaciones = new List<vacaciones>();
                 }
 
-                (int diasDisponibles, int diasDescontados) = CalcularVacaciones(userSesion.empleados.idEmpleado);
+                CalculoVacaciones();
 
-                ViewBag.diasDisponibles = diasDisponibles;
-                ViewBag.diasDescontados = diasDescontados;
+                foreach (vacaciones vacacion in vacaciones)
+                {
+                    empleados empleado = db.empleados.FirstOrDefault(e => e.idEmpleado == vacacion.idEmpleado);
+                    personas persona = db.personas.FirstOrDefault(e => e.Identificador == empleado.Personas_Identificador);
+                    var viewModel = new Vacacion
+                    {
+                        empleados = empleado,
+                        personas = persona,
+                        vacaciones = vacacion
+                    };
 
-                return View(vacacions);
+                    viewModelList.Add(viewModel);
+
+                }
+                return View(viewModelList);
             }
             catch (Exception ex)
             {
-                return View(); // or redirect to an error page
+                return View(viewModelList); // or redirect to an error page
             }
 
         }
@@ -70,25 +109,25 @@ namespace RH_BanderaBlanca.Controllers
                     return (cantidadDiasDisponibles, cantidadDiasDisfrutados);
                 }
 
-                // Calcular meses completos trabajados
-                DateTime fechaIngreso = _empleado.Fecha_Ingreso;
-                DateTime fechaActual = DateTime.Now;
-                int totalMeses = (fechaActual.Year - fechaIngreso.Year) * 12 + fechaActual.Month - fechaIngreso.Month;
-
-                // Ajustar si el día actual es menor que el día de ingreso
-                if (fechaActual.Day < fechaIngreso.Day)
-                {
-                    totalMeses--;
-                }
-
-                int mesesLaborales = totalMeses;
-
-                // Suponiendo que los empleados tienen 1 día de vacaciones por cada mes trabajado
-                cantidadDiasDisponibles = mesesLaborales;
-
                 // Si no existe registro en vacacionpersonal, crearlo
                 if (_vacacionPersonal == null)
                 {
+                    // Calcular meses completos trabajados
+                    DateTime fechaIngreso = _empleado.Fecha_Ingreso;
+                    DateTime fechaActual = DateTime.Now;
+                    int totalMeses = (fechaActual.Year - fechaIngreso.Year) * 12 + fechaActual.Month - fechaIngreso.Month;
+
+                    // Ajustar si el día actual es menor que el día de ingreso
+                    if (fechaActual.Day < fechaIngreso.Day)
+                    {
+                        totalMeses--;
+                    }
+
+                    int mesesLaborales = totalMeses;
+
+                    // Suponiendo que los empleados tienen 1 día de vacaciones por cada mes trabajado
+                    cantidadDiasDisponibles = mesesLaborales;
+
                     var _addVacacionPersonal = new registro_vacaciones_personales
                     {
                         idEmpleado = idEmpleado,
@@ -102,13 +141,6 @@ namespace RH_BanderaBlanca.Controllers
                     return (cantidadDiasDisponibles, cantidadDiasDisfrutados);
                 }
 
-                // Actualizar las vacaciones disponibles si hay una discrepancia
-                if (cantidadDiasDisponibles != _vacacionPersonal.Vacaciones_Disponibles)
-                {
-                    _vacacionPersonal.Vacaciones_Disponibles = cantidadDiasDisponibles;
-                    db.Entry(_vacacionPersonal).State = EntityState.Modified;
-                    db.SaveChanges();
-                }
 
                 cantidadDiasDisponibles = _vacacionPersonal.Vacaciones_Disponibles;
                 cantidadDiasDisfrutados = _vacacionPersonal.Vacaciones_Consumidas;
@@ -121,14 +153,19 @@ namespace RH_BanderaBlanca.Controllers
             }
         }
 
-        public void DescontarVacaciones(int idEmpleado, int cantidadDias)
+        public void DescontarVacaciones(int idEmpleado, int cantidadDias, bool disfrutadas)
         {
             try
             {
                 registro_vacaciones_personales _vacacionPersonal = db.registro_vacaciones_personales.FirstOrDefault(vp => vp.idEmpleado == idEmpleado);
 
                 _vacacionPersonal.Vacaciones_Disponibles = _vacacionPersonal.Vacaciones_Disponibles - cantidadDias;
-                _vacacionPersonal.Vacaciones_Consumidas += cantidadDias;
+                if (disfrutadas)
+                {
+                    _vacacionPersonal.Vacaciones_Disponibles = _vacacionPersonal.Vacaciones_Disponibles + cantidadDias;
+                    _vacacionPersonal.Vacaciones_Consumidas += cantidadDias;
+                }
+                
 
                 db.Entry(_vacacionPersonal).State = EntityState.Modified;
                 db.SaveChanges();
@@ -141,14 +178,18 @@ namespace RH_BanderaBlanca.Controllers
         }
 
 
-        public void SumarVacaciones(int idEmpleado, int cantidadDias)
+        public void SumarVacaciones(int idEmpleado, int cantidadDias, bool disfrutadas)
         {
             try
             {
                 registro_vacaciones_personales _vacacionPersonal = db.registro_vacaciones_personales.FirstOrDefault(vp => vp.idEmpleado == idEmpleado);
 
                 _vacacionPersonal.Vacaciones_Disponibles = _vacacionPersonal.Vacaciones_Disponibles + cantidadDias;
-                _vacacionPersonal.Vacaciones_Consumidas -= cantidadDias;
+
+                if (_vacacionPersonal.Vacaciones_Consumidas <= 0)
+                {
+                    _vacacionPersonal.Vacaciones_Consumidas = 0;
+                }
 
                 db.Entry(_vacacionPersonal).State = EntityState.Modified;
                 db.SaveChanges();
@@ -178,10 +219,35 @@ namespace RH_BanderaBlanca.Controllers
         // GET: vacaciones/Create
         public ActionResult Create()
         {
-            vacaciones vacaciones = new vacaciones();
+            try
+            {
+                CalculoVacaciones();
 
-            ViewBag.idEstados_Solicitudes = new SelectList(db.estados_solicitudes, "idEstados_Solicitudes", "Estados_Solicitud");
-            return View(vacaciones);
+                vacaciones vacaciones = new vacaciones();
+
+                ViewBag.idEstados_Solicitudes = new SelectList(db.estados_solicitudes, "idEstados_Solicitudes", "Estados_Solicitud");
+                return View(vacaciones);
+            }
+            catch (Exception ex)
+            {
+                return View("Gestion"); // or redirect to an error page
+            }
+
+        }
+
+
+        public void CalculoVacaciones()
+        {
+            Persona userSesion = (Persona)Session["user"];
+            if (userSesion == null || userSesion.empleados == null)
+            {
+                throw new Exception("Usuario en sesion o empleado nulos");
+            }
+
+            (int diasDisponibles, int diasDescontados) = CalcularVacaciones(userSesion.empleados.idEmpleado);
+
+            ViewBag.diasDisponibles = diasDisponibles;
+            ViewBag.diasDescontados = diasDescontados;
         }
 
         // POST: vacaciones/Create
@@ -263,10 +329,9 @@ namespace RH_BanderaBlanca.Controllers
                             if (diasDisponibles >= vacaciones.Cantidad_Dias)
                             {
                                 db.vacaciones.Add(vacaciones);// Seleccionar de la tabla feriados, los dias que se encuentre entre la finicio y ffin seleccionada
+                                DescontarVacaciones(vacaciones.idEmpleado, vacaciones.Cantidad_Dias, false);
                                 db.SaveChanges();
 
-                                db.registro_vacaciones_personales.FirstOrDefault().Vacaciones_Disponibles -= vacaciones.Cantidad_Dias;
-                                db.SaveChanges();
                                 return RedirectToAction("Gestion");
                             }
                             else
@@ -277,11 +342,13 @@ namespace RH_BanderaBlanca.Controllers
                     }
                 }
 
+                CalculoVacaciones();
                 CargarViewBags(vacaciones);
                 return View(vacaciones);
             }
             catch (Exception)
             {
+                CalculoVacaciones();
                 CargarViewBags(vacaciones);
                 return View(vacaciones);
             }
@@ -342,15 +409,11 @@ namespace RH_BanderaBlanca.Controllers
                     if (vacacion.idEstados_Solicitudes == 1)
                     {
                         (int diasDisponibles, int diasDescontados) = CalcularVacaciones(vacacion.idEmpleado);
+                        DescontarVacaciones(vacacion.idEmpleado, vacacion.Cantidad_Dias, true);
 
-                        if (diasDisponibles >= vacacion.Cantidad_Dias)
-                        {
-                            DescontarVacaciones(vacacion.idEmpleado, vacacion.Cantidad_Dias);
-
-                            db.Entry(vacacion).State = EntityState.Modified;
-                            db.SaveChanges();
-                            return RedirectToAction("Index");
-                        }
+                        db.Entry(vacacion).State = EntityState.Modified;
+                        db.SaveChanges();
+                        return RedirectToAction("Index");
 
                     }
 
@@ -358,14 +421,11 @@ namespace RH_BanderaBlanca.Controllers
                     {
                         (int diasDisponibles, int diasDescontados) = CalcularVacaciones(vacacion.idEmpleado);
 
-                        if (diasDisponibles >= vacacion.Cantidad_Dias)
-                        {
-                            SumarVacaciones(vacacion.idEmpleado, vacacion.Cantidad_Dias);
+                        SumarVacaciones(vacacion.idEmpleado, vacacion.Cantidad_Dias, true);
 
-                            db.Entry(vacacion).State = EntityState.Modified;
-                            db.SaveChanges();
-                            return RedirectToAction("Index");
-                        }
+                        db.Entry(vacacion).State = EntityState.Modified;
+                        db.SaveChanges();
+                        return RedirectToAction("Index");
 
                     }
 

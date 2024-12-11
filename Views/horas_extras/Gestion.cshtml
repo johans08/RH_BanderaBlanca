@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DataBase_RH_BanderaBlanca.Models.horas_extras>
+﻿@model IEnumerable<DataBase_RH_BanderaBlanca.Models.Hora_Extra>
 
 @{
     ViewBag.Title = "Gestión de Horas Extras";
@@ -25,26 +25,28 @@
                     <table class="table my-0 table-hover">
                         <thead class="thead-light">
                             <tr>
-                                <th>@Html.DisplayNameFor(model => model.Cantidad_Horas)</th>
-                                <th>@Html.DisplayNameFor(model => model.Detalle_Hora_Extra)</th>
-                                <th>@Html.DisplayNameFor(model => model.Monto_HoraExtra)</th>
-                                <th>@Html.DisplayNameFor(model => model.Observacion)</th>
-                                <th>@Html.DisplayNameFor(model => model.Aprobada)</th>
-                                <th>@Html.DisplayNameFor(model => model.HizoHoras)</th>
-                                <th>@Html.DisplayNameFor(model => model.catalogo_horas_extras.Tipo_Hora_Extra)</th>
+                                <th>Colaborador</th>
+                                <th>Cantidad de Horas</th>
+                                <th>Detalle de Hora Extra</th>
+                                <th>Monto de Hora Extra</th>
+                                <th>Observaciones</th>
+                                <th>Aprobado</th>
+                                <th>Realizo las horas</th>
+                                <th>Tipo de Hora Extra</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model)
                             {
                                 <tr>
-                                    <td>@Html.DisplayFor(modelItem => item.Cantidad_Horas)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.Detalle_Hora_Extra)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.Monto_HoraExtra)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.Observacion)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.Aprobada)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.HizoHoras)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.catalogo_horas_extras.Tipo_Hora_Extra)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.personas.Nombre) @Html.DisplayFor(modelItem => item.personas.Primer_Apellido) @Html.DisplayFor(modelItem => item.personas.Segundo_Apellido)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.horas_extras.Cantidad_Horas)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.horas_extras.Detalle_Hora_Extra)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.horas_extras.Monto_HoraExtra)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.horas_extras.Observacion)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.horas_extras.Aprobada)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.horas_extras.HizoHoras)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.horas_extras.catalogo_horas_extras.Tipo_Hora_Extra)</td>
                                 </tr>
                             }
                         </tbody>

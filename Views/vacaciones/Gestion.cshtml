@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DataBase_RH_BanderaBlanca.Models.vacaciones>
+﻿@model IEnumerable<DataBase_RH_BanderaBlanca.Models.Vacacion>
 
 @{
     ViewBag.Title = "Gestionar";
@@ -42,20 +42,27 @@
                     <table class="table my-0 table-hover">
                         <thead class="thead-light">
                             <tr>
-                                <th>@Html.DisplayNameFor(model => model.Cantidad_Dias)</th>
-                                <th>@Html.DisplayNameFor(model => model.Fecha_Solicitud)</th>
-                                <th>@Html.DisplayNameFor(model => model.Observacion)</th>
-                                <th>@Html.DisplayNameFor(model => model.estados_solicitudes.Estados_Solicitud)</th>
+                                <th>Empleado</th>
+                                <th>Fecha de inicio</th>
+                                <th>Fecha de finalizacion</th>
+                                <th>Cantidad de dias</th>
+                                <th>Fecha de Solicitud</th>
+                                <th>Observacion</th>
+                                <th>Estado de la solicitud</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model)
                             {
                                 <tr>
-                                    <td>@Html.DisplayFor(modelItem => item.Cantidad_Dias)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.Fecha_Solicitud)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.Observacion)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.estados_solicitudes.Estados_Solicitud)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.personas.Nombre) @Html.DisplayFor(modelItem => item.personas.Primer_Apellido) @Html.DisplayFor(modelItem => item.personas.Segundo_Apellido)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.vacaciones.Fecha_Inicio)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.vacaciones.Fecha_Final)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.vacaciones.Cantidad_Dias)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.vacaciones.Fecha_Solicitud)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.vacaciones.Observacion)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.vacaciones.estados_solicitudes.Estados_Solicitud)</td>
+
                                 </tr>
                             }
                         </tbody>

@@ -17,17 +17,97 @@ namespace RH_BanderaBlanca.Controllers
         // GET: horas_extras
         public ActionResult Index()
         {
-            var horas_extras = db.horas_extras.Include(h => h.catalogo_horas_extras);
-            return View(horas_extras.ToList());
+            var viewModelList = new List<Hora_Extra>();
+            try
+            {
+                Persona userSesion = new Persona();
+                userSesion = (Persona)Session["user"];
+
+                var _horasextras = db.horas_extras.ToList();
+
+
+                foreach (var _horaExtra in _horasextras)
+                {
+                    // Utilizar SingleOrDefault o FirstOrDefault para obtener un único objeto en lugar de una colección
+                    var catalogo = db.catalogo_horas_extras
+                                        .SingleOrDefault(i => i.idCatalogo_Horas_Extras == _horaExtra.idCatalogo_Horas_Extras);
+
+                    // Verificar si incapacidad no es nulo antes de crear el viewModel
+                    if (catalogo != null)
+                    {
+                        var empleado = db.empleados
+                                      .SingleOrDefault(i => i.idEmpleado == _horaExtra.idEmpleado);
+
+                        var persona = db.personas
+                                            .SingleOrDefault(i => i.Identificador == empleado.Personas_Identificador);
+
+                        if (empleado.idJefaturaDirecta == userSesion.empleados.idEmpleado)
+                        {
+                            var viewModel = new Hora_Extra
+                            {
+                                horas_extras = _horaExtra,
+                                catalogo_horas_extras = catalogo,
+                                personas = persona,
+                                empleados = empleado
+                            };
+
+                            viewModelList.Add(viewModel);
+                        }
+                    }
+                }
+
+                return View(viewModelList);
+            }
+            catch (Exception)
+            {
+                return View(viewModelList);
+            }
         }
 
         public ActionResult Gestion()
         {
-            Persona userSesion = new Persona();
-            userSesion = (Persona)Session["user"];
+            var viewModelList = new List<Hora_Extra>();
+            try
+            {
+                Persona userSesion = new Persona();
+                userSesion = (Persona)Session["user"];
+                var _horasextras = db.horas_extras.Include(h => h.catalogo_horas_extras).Where(i => i.idEmpleado.Equals(userSesion.empleados.idEmpleado)).ToList();
 
-            var horas_extras = db.horas_extras.Include(h => h.catalogo_horas_extras).Where(i => i.idEmpleado.Equals(userSesion.empleados.idEmpleado));
-            return View(horas_extras.ToList());
+
+                foreach (var _horaExtra in _horasextras)
+                {
+                    // Utilizar SingleOrDefault o FirstOrDefault para obtener un único objeto en lugar de una colección
+                    var catalogo = db.catalogo_horas_extras
+                                        .SingleOrDefault(i => i.idCatalogo_Horas_Extras == _horaExtra.idCatalogo_Horas_Extras);
+
+                    // Verificar si incapacidad no es nulo antes de crear el viewModel
+                    if (catalogo != null)
+                    {
+                        var empleado = db.empleados
+                                      .SingleOrDefault(i => i.idEmpleado == _horaExtra.idEmpleado);
+
+                        var persona = db.personas
+                                            .SingleOrDefault(i => i.Identificador == empleado.Personas_Identificador);
+
+                        var viewModel = new Hora_Extra
+                        {
+                            horas_extras = _horaExtra,
+                            catalogo_horas_extras = catalogo,
+                            personas = persona,
+                            empleados = empleado
+                        };
+
+                        viewModelList.Add(viewModel);
+                    }
+                }
+
+                return View(viewModelList);
+            }
+            catch (Exception)
+            {
+                return View(viewModelList);
+            }
+
         }
 
         // GET: horas_extras/Details/5
@@ -67,18 +147,24 @@ namespace RH_BanderaBlanca.Controllers
 
                 _horas_extras.Aprobada = false;
                 _horas_extras.HizoHoras = false;
-                _horas_extras.idCatalogo_Horas_Extras = 1;
                 _horas_extras.idEmpleado = userSesion.empleados.idEmpleado;
 
                 empleados _empleado = db.empleados.FirstOrDefault(e => e.idEmpleado.Equals(userSesion.empleados.idEmpleado));
-                catalogo_horas_extras _tipoHoraExtra = db.catalogo_horas_extras.Find(_horas_extras.idCatalogo_Horas_Extras);
+                
                 puestos_laborales _puestoLaboral = db.puestos_laborales.Find(_empleado.idPuestos_Laboral);
+                horarios horarios = db.horarios.FirstOrDefault(h => h.idEmpleado.Equals(_empleado.idEmpleado));
+                _horas_extras.idCatalogo_Horas_Extras = horarios.idTipo_Horario;
+                catalogo_horas_extras _tipoHoraExtra = db.catalogo_horas_extras.Find(_horas_extras.idCatalogo_Horas_Extras);
 
-                if (_empleado == null || _tipoHoraExtra == null || _puestoLaboral == null)
+                if (_empleado == null || _tipoHoraExtra == null || _puestoLaboral == null || horarios == null)
                 {
+                    ModelState.AddModelError("FechaPermiso", "Ha ocurrido un error al procesar la solicitud");
                     CargarViewBags(_horas_extras);
                     return View(_horas_extras);
                 }
+
+
+                
 
                 // Calcular monto descontado
                 int horasTrabajadasPorDia = 8;
@@ -91,6 +177,7 @@ namespace RH_BanderaBlanca.Controllers
                 return RedirectToAction("Gestion");
             }
 
+            ModelState.AddModelError("FechaPermiso", "No es posible crear la solicitud.");
             CargarViewBags(_horas_extras);
             return View(_horas_extras);
         }

@@ -29,12 +29,13 @@
                                 <th>Fecha Inicio de Incapacidad</th>
                                 <th>Fecha Final de Incapacidad</th>
                                 <th>Colaborador</th>
-                                <th>@Html.DisplayNameFor(model => model.incapacidad.Cantidad_Dias)</th>
-                                <th>@Html.DisplayNameFor(model => model.incapacidad.Monto_Deduccion)</th>
-                                <th>@Html.DisplayNameFor(model => model.incapacidad.Detalle_Incapacidad)</th>
-                                <th>@Html.DisplayNameFor(model => model.incapacidad.catalogo_incapacidades.Descripcion)</th>
-                                <th>@Html.DisplayNameFor(model => model.incapacidad.Observacion)</th>
-                                <th>@Html.DisplayNameFor(model => model.incapacidad.estados_solicitudes.Estados_Solicitud)</th>
+                                <th>Cantidad de Dias</th>
+                                <th>Monto a deducir</th>
+                                <th>Detalle de Incapacidaad</th>
+                                <th>Tipo de Incapacidad</th>
+                                <th>Observaciones de la Solicitud</th>
+                                <th>Estado</th>
+                                <th>Número de Boleta</th>
                                 <th>Imagen Comprobante</th>
                                 <th>Acciones</th>
                             </tr>
@@ -52,6 +53,7 @@
                                     <td>@Html.DisplayFor(modelItem => item.incapacidad.catalogo_incapacidades.Descripcion)</td>
                                     <td>@Html.DisplayFor(modelItem => item.incapacidad.Observacion)</td>
                                     <td>@Html.DisplayFor(modelItem => item.incapacidad.estados_solicitudes.Estados_Solicitud)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.incapacidad.Numero_Boleta)</td>
                                     <td>
                                         @if (!string.IsNullOrEmpty(item.comprobantes.Imagen_Comprobante))
                                         {

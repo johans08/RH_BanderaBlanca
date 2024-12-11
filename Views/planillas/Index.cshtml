@@ -18,15 +18,36 @@
             <div class="container mt-5 pb-5">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2 class="mb-0">Planillas</h2>
-                    @using (Html.BeginForm("PagarPlanillas", "planillas", FormMethod.Post))
-                    {
-                        @Html.AntiForgeryToken()
-                        if (user.ObtenerIdsDeAccesos(user.listaAccesos).Contains(8)) // Solo muestra los botones si el idEstado es 3
-                        { 
-                            <button type="submit" class="btn btn-success">Generar Planillas</button>
+                    <div class="ml-auto d-flex">
+                        @using (Html.BeginForm("PagarPlanillas", "planillas", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            if (user.ObtenerIdsDeAccesos(user.listaAccesos).Contains(8)) // Solo muestra los botones si el idEstado es 3
+                            {
+                                <button type="submit" class="btn btn-primary m-2">Generar Planillas</button>
+                            }
                         }
-                    }
+                        @using (Html.BeginForm("RegenerarPlanillas", "planillas", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            if (user.ObtenerIdsDeAccesos(user.listaAccesos).Contains(8)) // Solo muestra los botones si el idEstado es 3
+                            {
+                                <button type="submit" class="btn btn-warning m-2">Recalcular Planillas</button>
+                            }
+                        }
+                        @using (Html.BeginForm("AprobarPlanillas", "planillas", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            if (user.ObtenerIdsDeAccesos(user.listaAccesos).Contains(6)) // Solo muestra los botones si el idEstado es 3
+                            {
+                                <button type="submit" class="btn btn-success m-2">Aprobar Planillas</button>
+                            }
+                        }
                     </div>
+                </div>
+
+
+
 
                 <div class="table-responsive">
                     <table class="table my-0 table-hover">
@@ -34,20 +55,15 @@
                             <tr>
                                 <th>Sucursales</th>
                                 <th>Colaborador</th>
-                                <th>@Html.DisplayNameFor(model => model.planillas.Fecha_Planilla)</th>
-                                <th>@Html.DisplayNameFor(model => model.planillas.Comentario_Planilla)</th>
+                                <th>Fecha de Planilla</th>
+                                <th>Comentario</th>
                                 <th>Salario Laboral</th>
-                                <th>@Html.DisplayNameFor(model => model.detalle_planillas.Monto_Total_Horas_Extras)</th>
-                                <th>@Html.DisplayNameFor(model => model.detalle_planillas.Monto_Total_Incapacidades)</th>
-                                <th>@Html.DisplayNameFor(model => model.detalle_planillas.Monto_Descontado_Renta)</th>
-                                <th>@Html.DisplayNameFor(model => model.detalle_planillas.Monto_Total_Deducciones)</th>
-                                <th>@Html.DisplayNameFor(model => model.detalle_planillas.Monto_Total_Planilla)</th>
-                                <th>@Html.DisplayNameFor(model => model.planillas.estados_solicitudes.Estados_Solicitud)</th>
-                                @if (user.ObtenerIdsDeAccesos(user.listaAccesos).Contains(6)) // Solo muestra los botones si el idEstado es 3
-                                {
-                                    <th>Acciones</th>
-                                }
-
+                                <th>Total Horas Extras</th>
+                                <th>Total Incapacidades</th>
+                                <th>Descuento por Renta</th>
+                                <th>Total Deducciones</th>
+                                <th>Total Planilla</th>
+                                <th>Estado</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -64,32 +80,15 @@
                                     <td>@Html.DisplayFor(modelItem => item.detalle_planillas.Monto_Descontado_Renta)</td>
                                     <td>@Html.DisplayFor(modelItem => item.detalle_planillas.Monto_Total_Deducciones)</td>
                                     <td>@Html.DisplayFor(modelItem => item.detalle_planillas.Monto_Total_Planilla)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.planillas.estados_solicitudes.Estados_Solicitud)</td>
-                                    @if ((item.planillas.idEstados_Solicitudes != 1 && item.planillas.idEstados_Solicitudes != 2) && user.ObtenerIdsDeAccesos(user.listaAccesos).Contains(6)) // Solo muestra los botones si el idEstado es 3
-                                    {
-                                        <!-- Botón para aprobar -->
-                                        using (Html.BeginForm("UpdateEstado", "Planillas", FormMethod.Post))
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.planillas.estados_solicitudes.Estados_Solicitud)
+                                        @if (item.planillas.idEstados_Solicitudes == 5)
                                         {
-                                            @Html.Hidden("id", item.planillas.Fecha_Planilla) <!-- Id del registro de la liquidación -->
-                                            @Html.Hidden("estado", 1) <!-- Estado 1 para aprobado -->
-                                            @Html.Hidden("idEmpleado", item.planillas.idEmpleado)
-                                            <td><button type="submit" class="btn btn-success">Aprobar</button></td>
+                                            <span class="text-danger ms-2">
+                                                <i class="bi bi-exclamation-triangle"></i>
+                                            </span>
                                         }
-
-                                        <!-- Botón para rechazar -->
-                                        using (Html.BeginForm("UpdateEstado", "Planillas", FormMethod.Post))
-                                        {
-                                            @Html.Hidden("id", item.planillas.Fecha_Planilla)
-                                            @Html.Hidden("estado", 2) <!-- Estado 2 para rechazado -->
-                                            @Html.Hidden("idEmpleado", item.planillas.idEmpleado)
-                                            <td><button type="submit" class="btn btn-danger">Rechazar</button></td>
-                                        }
-                                    }
-                                    else
-                                    {
-                                        <td>Accion no disponible</td>
-
-                                    }
+                                    </td>
                                 </tr>
                             }
                         </tbody>

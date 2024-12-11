@@ -19,6 +19,9 @@ namespace RH_BanderaBlanca.Controllers
         {
             try
             {
+                Persona userSesion = new Persona();
+                userSesion = (Persona)Session["user"];
+
                 // Obtener el mes y año actuales
                 var mesActual = DateTime.Now.Month;
                 var anioActual = DateTime.Now.Year;
@@ -53,16 +56,35 @@ namespace RH_BanderaBlanca.Controllers
                             ? db.sucursales.SingleOrDefault(i => i.Identificador_Sucursal == empleado.Identificador_Sucursal)
                             : null;
 
-                        var viewModel = new Planilla
+                        if (userSesion.ObtenerIdsDeAccesos(userSesion.listaAccesos).Contains(10))
                         {
-                            detalle_planillas = detalle_planilla,
-                            planillas = planilla,
-                            personas = persona,
-                            empleados = empleado,
-                            sucursales = sucursal
-                        };
+                            var viewModel = new Planilla
+                            {
+                                detalle_planillas = detalle_planilla,
+                                planillas = planilla,
+                                personas = persona,
+                                empleados = empleado,
+                                sucursales = sucursal
+                            };
 
-                        viewModelList.Add(viewModel);
+                            viewModelList.Add(viewModel);
+                        }
+                        else
+                        {
+                            if (empleado.idJefaturaDirecta == userSesion.empleados.idEmpleado)
+                            {
+                                var viewModel = new Planilla
+                                {
+                                    detalle_planillas = detalle_planilla,
+                                    planillas = planilla,
+                                    personas = persona,
+                                    empleados = empleado,
+                                    sucursales = sucursal
+                                };
+
+                                viewModelList.Add(viewModel);
+                            }
+                        }
                     }
                 }
 
@@ -80,43 +102,56 @@ namespace RH_BanderaBlanca.Controllers
 
         public ActionResult Gestion()
         {
-            Persona userSesion = new Persona();
-            userSesion = (Persona)Session["user"];
-
-            var detalle_planillas = db.detalle_maestro_planillas.Where(p => p.idEmpleado.Equals(userSesion.empleados.idEmpleado)).ToList();
             var viewModelList = new List<Planilla>();
 
-            foreach (var detalle_planilla in detalle_planillas)
+            try
             {
-                // Verificar si incapacidad no es nulo antes de crear el viewModel
-                if (detalle_planilla != null)
+                Persona userSesion = new Persona();
+                userSesion = (Persona)Session["user"];
+
+                var detalle_planillas = db.detalle_maestro_planillas.Where(p => p.idEmpleado.Equals(userSesion.empleados.idEmpleado)).ToList();
+
+
+                foreach (var detalle_planilla in detalle_planillas)
                 {
-                    // Utilizar SingleOrDefault o FirstOrDefault para obtener un único objeto en lugar de una colección
-                    var planilla = db.planillas
-                                        .SingleOrDefault(i => i.Fecha_Planilla == detalle_planilla.Fecha_Planilla && i.idEmpleado == userSesion.empleados.idEmpleado);
-                    var empleado = db.empleados
-                                   .SingleOrDefault(i => i.idEmpleado == planilla.idEmpleado);
-
-                    var persona = db.personas
-                                        .SingleOrDefault(i => i.Identificador == empleado.Personas_Identificador);
-
-                    var sucursales = db.sucursales
-                                        .SingleOrDefault(i => i.Identificador_Sucursal == empleado.Identificador_Sucursal);
-
-                    var viewModel = new Planilla
+                    // Verificar si incapacidad no es nulo antes de crear el viewModel
+                    if (detalle_planilla != null)
                     {
-                        detalle_planillas = detalle_planilla,
-                        planillas = planilla,
-                        personas = persona,
-                        empleados = empleado,
-                        sucursales = sucursales
-                    };
+                        // Utilizar SingleOrDefault o FirstOrDefault para obtener un único objeto en lugar de una colección
+                        var planilla = db.planillas
+                                            .SingleOrDefault(i => i.Fecha_Planilla == detalle_planilla.Fecha_Planilla && i.idEmpleado == userSesion.empleados.idEmpleado);
+                        var empleado = db.empleados
+                                       .SingleOrDefault(i => i.idEmpleado == planilla.idEmpleado);
 
-                    viewModelList.Add(viewModel);
+                        var persona = db.personas
+                                            .SingleOrDefault(i => i.Identificador == empleado.Personas_Identificador);
+
+                        var sucursales = db.sucursales
+                                            .SingleOrDefault(i => i.Identificador_Sucursal == empleado.Identificador_Sucursal);
+
+                        var viewModel = new Planilla
+                        {
+                            detalle_planillas = detalle_planilla,
+                            planillas = planilla,
+                            personas = persona,
+                            empleados = empleado,
+                            sucursales = sucursales
+                        };
+
+                        viewModelList.Add(viewModel);
+
+                        
+                    }
                 }
+
+                return View(viewModelList);
+            }
+            catch (Exception)
+            {
+                return View(viewModelList);
             }
 
-            return View(viewModelList);
+            
         }
 
         [HttpPost]
@@ -142,6 +177,19 @@ namespace RH_BanderaBlanca.Controllers
             var planillas = db.planillas.Include(p => p.estados_solicitudes);
             return RedirectToAction("Index", planillas.ToList());
         }
+
+        public ActionResult AprobarPlanillas()
+        {
+            Persona userSesion = (Persona)Session["user"];
+            int idJefaturaDirecta = userSesion.empleados.idEmpleado;
+
+            Planilla planilla = new Planilla();
+            planilla.AprobarPlanillas(idJefaturaDirecta);
+
+            var planillas = db.planillas.Include(p => p.estados_solicitudes);
+            return RedirectToAction("Index", planillas.ToList());
+        }
+
 
         public ActionResult RegenerarPlanillas()
         {

@@ -1,66 +1,50 @@
 ﻿@model DataBase_RH_BanderaBlanca.Models.horas_extras
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Editar Horas Extra";
+    ViewBag.HorasList = new SelectList(Enumerable.Range(1, 5).Select(h => new { Value = h, Text = $"{h} hora(s)" }), "Value", "Text");
 }
 
-<h2>Edit</h2>
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Editar Horas Extra</h2>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    
-<div class="form-horizontal">
-    <h4>horas_extras</h4>
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    @Html.HiddenFor(model => model.Fecha_HoraExtra)
+    @using (Html.BeginForm("Edit", "horas_Extras", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
 
-    @Html.HiddenFor(model => model.idEmpleado)
+        <div class="mb-4">
+            <h4 class="text-muted">Detalles de Horas Extra</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-    @Html.HiddenFor(model => model.Cantidad_Horas)
+        <div class="row">
+            @Html.HiddenFor(model => model.Fecha_HoraExtra)
+            @Html.HiddenFor(model => model.idEmpleado)
+            @Html.HiddenFor(model => model.Cantidad_Horas)
+            @Html.HiddenFor(model => model.Detalle_Hora_Extra)
+            @Html.HiddenFor(model => model.Monto_HoraExtra)
+            @Html.HiddenFor(model => model.HizoHoras)
+            @Html.HiddenFor(model => model.idCatalogo_Horas_Extras)
 
-    @Html.HiddenFor(model => model.Detalle_Hora_Extra)
+            <div class="col-md-6 mb-3">
+                @Html.LabelFor(model => model.Observacion, "Observación", htmlAttributes: new { @class = "form-label" })
+                @Html.EditorFor(model => model.Observacion, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Observacion, "", new { @class = "text-danger" })
+            </div>
 
-    @Html.HiddenFor(model => model.Monto_HoraExtra)
-
-    @Html.HiddenFor(model => model.HizoHoras)
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.idCatalogo_Horas_Extras, "idCatalogo_Horas_Extras", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.DropDownList("idCatalogo_Horas_Extras", null, htmlAttributes: new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.idCatalogo_Horas_Extras, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Observacion, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Observacion, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Observacion, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Aprobada, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            <div class="checkbox">
-                @Html.EditorFor(model => model.Aprobada)
-                @Html.ValidationMessageFor(model => model.Aprobada, "", new { @class = "text-danger" })
+            <div class="col-md-6 mb-3">
+                @Html.LabelFor(model => model.Aprobada, "Aprobada", htmlAttributes: new { @class = "form-label" })
+                <div class="form-check">
+                    @Html.EditorFor(model => model.Aprobada, new { htmlAttributes = new { @class = "form-check-input" } })
+                    @Html.ValidationMessageFor(model => model.Aprobada, "", new { @class = "text-danger" })
+                </div>
             </div>
         </div>
-    </div>
 
-
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Save" class="btn btn-default" />
+            <div class="d-flex justify-content-end">
+                <input type="submit" value="Guardar" class="btn btn-primary" />
+                @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-secondary ms-2" })
+            </div>
         </div>
-    </div>
-</div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
+    }
 </div>

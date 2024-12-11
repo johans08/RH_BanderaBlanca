@@ -2,6 +2,8 @@
 
 @{
     ViewBag.Title = "Registrar Permiso";
+
+    ViewBag.HorasList = new SelectList(Enumerable.Range(1, 5).Select(h => new { Value = h, Text = $"{h} hora(s)" }), "Value", "Text");
 }
 
 <div class="container mt-5">
@@ -19,7 +21,7 @@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     @Html.LabelFor(model => model.Fecha_Permiso, "Fecha del Permiso", htmlAttributes: new { @class = "form-label" })
-                    @Html.EditorFor(model => model.Fecha_Permiso, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+                    @Html.EditorFor(model => model.Fecha_Permiso, new { htmlAttributes = new { @class = "form-control", type = "date", id = "fechaInicio", min = DateTime.Today.ToString("yyyy-MM-dd") } })
                     @Html.ValidationMessageFor(model => model.Fecha_Permiso, "", new { @class = "text-danger" })
                 </div>
 
@@ -30,9 +32,17 @@
                 </div>
             </div>
 
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    @Html.Label("Cantidad de Horas", htmlAttributes: new { @class = "form-label" })
+                    @Html.DropDownList("Cantidad_Horas", ViewBag.HorasList as SelectList, "Seleccione horas", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Cantidad_Horas, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
             <div class="d-flex justify-content-end">
                 <input type="submit" value="Registrar" class="btn btn-primary" />
-                @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-secondary ms-2" })
+                @Html.ActionLink("Cancelar", "Gestion", null, new { @class = "btn btn-secondary ms-2" })
             </div>
         </div>
     }

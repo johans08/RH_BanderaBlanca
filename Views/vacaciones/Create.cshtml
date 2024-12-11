@@ -7,6 +7,27 @@
 <div class="container mt-5">
     <h2 class="text-center mb-4">Registrar Vacaciones</h2>
 
+    <div class="container mt-4 pb-5">
+        <div class="row text-center mb-4">
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title text-muted">Vacaciones Disponibles</h5>
+                        <h1 class="display-4 text-success">@ViewBag.diasDisponibles</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title text-muted">Vacaciones Disfrutadas</h5>
+                        <h1 class="display-4 text-primary">@ViewBag.diasDescontados</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     @using (Html.BeginForm("Create", "vacaciones", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
@@ -19,20 +40,20 @@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     @Html.LabelFor(model => model.Fecha_Inicio, "Fecha de Inicio", htmlAttributes: new { @class = "form-label" })
-                    @Html.EditorFor(model => model.Fecha_Inicio, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+                    @Html.EditorFor(model => model.Fecha_Inicio, new { htmlAttributes = new { @class = "form-control", type = "date", id = "fechaInicio", min = DateTime.Today.ToString("yyyy-MM-dd") } })
                     @Html.ValidationMessageFor(model => model.Fecha_Inicio, "", new { @class = "text-danger" })
                 </div>
 
                 <div class="col-md-6 mb-3">
                     @Html.LabelFor(model => model.Fecha_Final, "Fecha Final", htmlAttributes: new { @class = "form-label" })
-                    @Html.EditorFor(model => model.Fecha_Final, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+                    @Html.EditorFor(model => model.Fecha_Final, new { htmlAttributes = new { @class = "form-control", type = "date", id = "fechaFinal", min = DateTime.Today.ToString("yyyy-MM-dd") } })
                     @Html.ValidationMessageFor(model => model.Fecha_Final, "", new { @class = "text-danger" })
                 </div>
             </div>
 
             <div class="d-flex justify-content-end">
                 <input type="submit" value="Registrar" class="btn btn-primary" />
-                @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-secondary ms-2" })
+                @Html.ActionLink("Cancelar", "Gestion", null, new { @class = "btn btn-secondary ms-2" })
             </div>
         </div>
     }
@@ -40,4 +61,16 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script>document.getElementById("fechaInicio").addEventListener("change", function () {
+            var fechaInicio = this.value;
+            var fechaFinal = document.getElementById("fechaFinal");
+
+            // Establecer el mínimo de la fecha final basado en la fecha de inicio seleccionada
+            fechaFinal.min = fechaInicio;
+
+            // Si la fecha final actual es menor que la nueva mínima, se reinicia
+            if (fechaFinal.value < fechaInicio) {
+                fechaFinal.value = fechaInicio;
+            }
+        });</script>
 }

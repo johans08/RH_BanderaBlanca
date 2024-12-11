@@ -19,82 +19,105 @@ namespace RH_BanderaBlanca.Controllers
         // GET: incapacidades
         public ActionResult Index()
         {
-            Persona userSesion = new Persona();
-            userSesion = (Persona)Session["user"];
-
-            var comprobantes = db.comprobantes_incapacidad.ToList();
             var viewModelList = new List<Incapacidad_Comprobante>();
 
-            foreach (var comprobante in comprobantes)
+            try
             {
-                // Utilizar SingleOrDefault o FirstOrDefault para obtener un único objeto en lugar de una colección
-                var incapacidad = db.incapacidades
-                                    .SingleOrDefault(i => i.Fecha_Incapacidad == comprobante.Incapacidades_Fecha_Incapacidad && i.idEmpleado != userSesion.empleados.idEmpleado);
+                Persona userSesion = (Persona)Session["user"];
+                var comprobantes = db.comprobantes_incapacidad.ToList();
 
-                // Verificar si incapacidad no es nulo antes de crear el viewModel
-                if (incapacidad != null)
+                foreach (var comprobante in comprobantes)
                 {
-                    var empleado = db.empleados
-                                  .SingleOrDefault(i => i.idEmpleado == incapacidad.idEmpleado);
+                    // Obtener todas las coincidencias en lugar de una sola
+                    var incapacidades = db.incapacidades
+                                          .Where(i => i.Fecha_Incapacidad == comprobante.Incapacidades_Fecha_Incapacidad && i.idEmpleado != userSesion.empleados.idEmpleado)
+                                          .ToList();
 
-                    var persona = db.personas
-                                        .SingleOrDefault(i => i.Identificador == empleado.Personas_Identificador);
-
-                    var viewModel = new Incapacidad_Comprobante
+                    // Iterar sobre todas las coincidencias
+                    foreach (var incapacidad in incapacidades)
                     {
-                        incapacidad = incapacidad,
-                        comprobantes = comprobante,
-                        personas = persona,
-                        empleados = empleado
-                    };
+                        var empleado = db.empleados
+                                         .FirstOrDefault(e => e.idEmpleado == incapacidad.idEmpleado);
 
-                    viewModelList.Add(viewModel);
+                        var persona = db.personas
+                                        .FirstOrDefault(p => p.Identificador == empleado.Personas_Identificador);
+
+                        if (empleado != null && empleado.idJefaturaDirecta == userSesion.empleados.idEmpleado)
+                        {
+                            var viewModel = new Incapacidad_Comprobante
+                            {
+                                incapacidad = incapacidad,
+                                comprobantes = comprobante,
+                                personas = persona,
+                                empleados = empleado
+                            };
+                            var existingItem = viewModelList.FirstOrDefault(vm => vm.comprobantes.Incapacidades_Fecha_Incapacidad == comprobante.Incapacidades_Fecha_Incapacidad && vm.incapacidad.idEmpleado == incapacidad.idEmpleado);
+                            if (existingItem == null)
+                            {
+                                viewModelList.Add(viewModel);
+                            }
+                        }
+                    }
                 }
-            }
 
-            return View(viewModelList);
+                return View(viewModelList);
+            }
+            catch (Exception ex)
+            {
+                // Registrar el error para depuración
+                ViewBag.ErrorMessage = ex.Message;
+                return View(viewModelList);
+            }
         }
+
+
 
 
         public ActionResult Gestion()
         {
-            Persona userSesion = new Persona();
-            userSesion = (Persona)Session["user"];
-
-            var comprobantes = db.comprobantes_incapacidad.ToList();
             var viewModelList = new List<Incapacidad_Comprobante>();
 
-            foreach (var comprobante in comprobantes)
+            try
             {
-                // Utilizar SingleOrDefault o FirstOrDefault para obtener un único objeto en lugar de una colección
-                var incapacidad = db.incapacidades
-                                    .SingleOrDefault(i => i.Fecha_Incapacidad == comprobante.Incapacidades_Fecha_Incapacidad && i.idEmpleado == userSesion.empleados.idEmpleado);
+                Persona userSesion = (Persona)Session["user"];
+                var comprobantes = db.comprobantes_incapacidad.ToList();
 
-                
-
-                // Verificar si incapacidad no es nulo antes de crear el viewModel
-                if (incapacidad != null)
+                foreach (var comprobante in comprobantes)
                 {
-                    var empleado = db.empleados
-                                  .SingleOrDefault(i => i.idEmpleado == incapacidad.idEmpleado);
+                    var incapacidad = db.incapacidades
+                        .FirstOrDefault(i => i.Fecha_Incapacidad == comprobante.Incapacidades_Fecha_Incapacidad && i.idEmpleado == userSesion.empleados.idEmpleado);
 
-                    var persona = db.personas
-                                        .SingleOrDefault(i => i.Identificador == empleado.Personas_Identificador);
-
-                    var viewModel = new Incapacidad_Comprobante
+                    if (incapacidad != null)
                     {
-                        incapacidad = incapacidad,
-                        comprobantes = comprobante,
-                        personas = persona,
-                        empleados = empleado
-                    };
+                        var empleado = db.empleados.FirstOrDefault(i => i.idEmpleado == incapacidad.idEmpleado);
+                        var persona = db.personas.FirstOrDefault(i => i.Identificador == empleado.Personas_Identificador);
 
-                    viewModelList.Add(viewModel);
+                        var viewModel = new Incapacidad_Comprobante
+                        {
+                            incapacidad = incapacidad,
+                            comprobantes = comprobante,
+                            personas = persona,
+                            empleados = empleado
+                        };
+
+                        // Verificar si ya existe un registro similar
+                        var existingItem = viewModelList.FirstOrDefault(vm => vm.comprobantes.Incapacidades_Fecha_Incapacidad == comprobante.Incapacidades_Fecha_Incapacidad && vm.incapacidad.idEmpleado == incapacidad.idEmpleado);
+                        if (existingItem == null)
+                        {
+                            viewModelList.Add(viewModel);
+                        }
+                    }
                 }
-            }
 
-            return View(viewModelList);
+                return View(viewModelList);
+            }
+            catch (Exception ex)
+            {
+                // Manejar el error aquí (opcional)
+                return View(viewModelList);
+            }
         }
+
 
         // GET: incapacidades/Details/5
         public ActionResult Details(DateTime id)
@@ -152,11 +175,17 @@ namespace RH_BanderaBlanca.Controllers
         {
             try
             {
+                Persona userSesion = new Persona();
+                userSesion = (Persona)Session["user"];
+
                 // Verificar si ya existe una incapacidad para el mismo empleado y dentro del mismo rango de fechas
                 var existingIncapacidad = db.incapacidades.FirstOrDefault(i =>
-                    i.idEmpleado == _incapacidad.incapacidad.idEmpleado &&
-                    i.Fecha_Incapacidad <= _incapacidad.incapacidad.Fecha_Final_Incapacidad &&
-                    i.Fecha_Final_Incapacidad >= _incapacidad.incapacidad.Fecha_Incapacidad);
+                    i.idEmpleado == userSesion.empleados.idEmpleado &&
+                    (
+                        (_incapacidad.incapacidad.Fecha_Incapacidad >= i.Fecha_Incapacidad && _incapacidad.incapacidad.Fecha_Incapacidad <= i.Fecha_Final_Incapacidad) || // Nueva fecha inicial está dentro del rango existente
+                        (_incapacidad.incapacidad.Fecha_Final_Incapacidad >= i.Fecha_Incapacidad && _incapacidad.incapacidad.Fecha_Final_Incapacidad <= i.Fecha_Final_Incapacidad) || // Nueva fecha final está dentro del rango existente
+                        (_incapacidad.incapacidad.Fecha_Incapacidad <= i.Fecha_Incapacidad && _incapacidad.incapacidad.Fecha_Final_Incapacidad >= i.Fecha_Final_Incapacidad) // Nuevo rango engloba al rango existente
+                    ));
 
                 if (existingIncapacidad != null)
                 {
@@ -164,6 +193,8 @@ namespace RH_BanderaBlanca.Controllers
                     CargarViewBags(_incapacidad);
                     return View(_incapacidad);
                 }
+
+
 
                 // Resto del código para calcular días, salario, y guardar la incapacidad
                 TimeSpan diferencia = _incapacidad.incapacidad.Fecha_Final_Incapacidad - _incapacidad.incapacidad.Fecha_Incapacidad;
@@ -188,8 +219,7 @@ namespace RH_BanderaBlanca.Controllers
                 else
                 {
 
-                    Persona userSesion = new Persona();
-                    userSesion = (Persona)Session["user"];
+                    
 
                     _incapacidad.incapacidad.Cantidad_Dias = diferenciaSinFinesDeSemana;
 
@@ -237,10 +267,10 @@ namespace RH_BanderaBlanca.Controllers
                 CargarViewBags(_incapacidad);
                 return View(_incapacidad);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 // Capturar cualquier excepción y mostrar un mensaje genérico
-                ModelState.AddModelError("", "No se ha creado la incapacidad, por favor revisa las fechas si ya tienes una incapacidad");
+                ModelState.AddModelError("", "No se ha creado la incapacidad, por favor revisa las fechas si ya tienes una incapacidad o si el numero de boleta ya fue utilizado");
                 CargarViewBags(_incapacidad);
                 return View(_incapacidad);
             }
@@ -278,7 +308,7 @@ namespace RH_BanderaBlanca.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Fecha_Incapacidad,Fecha_Final_Incapacidad,idEmpleado,idCatalogo_Incapacidad,Cantidad_Dias,Monto_Deduccion,Detalle_Incapacidad,Estados_Solicitudes_idEstados_Solicitudes, Observacion")] incapacidades incapacidades)
+        public ActionResult Edit([Bind(Include = "Fecha_Incapacidad,Fecha_Final_Incapacidad,idEmpleado,idCatalogo_Incapacidad,Cantidad_Dias,Monto_Deduccion,Detalle_Incapacidad,Estados_Solicitudes_idEstados_Solicitudes, Observacion, Numero_Boleta")] incapacidades incapacidades)
         {
             if (ModelState.IsValid)
             {

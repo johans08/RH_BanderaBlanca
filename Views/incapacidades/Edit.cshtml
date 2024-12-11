@@ -1,57 +1,50 @@
 ﻿@model DataBase_RH_BanderaBlanca.Models.incapacidades
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Editar Incapacidad";
 }
 
-<h2>Edit</h2>
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Editar Incapacidad</h2>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    
-<div class="form-horizontal">
-    <h4>incapacidades</h4>
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    @Html.HiddenFor(model => model.Fecha_Incapacidad)
+    @using (Html.BeginForm("Edit", "incapacidades", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
 
-    @Html.HiddenFor(model => model.Fecha_Final_Incapacidad)
+        <div class="mb-4">
+            <h4 class="text-muted">Detalles de Incapacidad</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-    @Html.HiddenFor(model => model.idEmpleado)
+        <div class="row">
+            @Html.HiddenFor(model => model.Fecha_Incapacidad)
+            @Html.HiddenFor(model => model.Fecha_Final_Incapacidad)
+            @Html.HiddenFor(model => model.idEmpleado)
+            @Html.HiddenFor(model => model.Monto_Deduccion)
+            @Html.HiddenFor(model => model.Detalle_Incapacidad)
+            @Html.HiddenFor(model => model.Cantidad_Dias)
+            @Html.HiddenFor(model => model.idCatalogo_Incapacidad)
+            @Html.HiddenFor(model => model.Numero_Boleta)
 
-    @Html.HiddenFor(model => model.Monto_Deduccion)
+            <!-- Observación -->
+            <div class="col-md-6 mb-3">
+                @Html.LabelFor(model => model.Observacion, "Observación", htmlAttributes: new { @class = "form-label" })
+                @Html.EditorFor(model => model.Observacion, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Observacion, "", new { @class = "text-danger" })
+            </div>
 
-    @Html.HiddenFor(model => model.Detalle_Incapacidad)
-
-    @Html.HiddenFor(model => model.Cantidad_Dias)
-
-    @Html.HiddenFor(model => model.idCatalogo_Incapacidad)
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Observacion, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Observacion, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Observacion, "", new { @class = "text-danger" })
+            <!-- Estados Solicitudes -->
+            <div class="col-md-6 mb-3">
+                @Html.LabelFor(model => model.Estados_Solicitudes_idEstados_Solicitudes, "Estado de Solicitud", htmlAttributes: new { @class = "form-label" })
+                @Html.DropDownList("Estados_Solicitudes_idEstados_Solicitudes", null, htmlAttributes: new { @class = "form-select" })
+                @Html.ValidationMessageFor(model => model.Estados_Solicitudes_idEstados_Solicitudes, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.Estados_Solicitudes_idEstados_Solicitudes, "Estados Solicitudes", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.DropDownList("Estados_Solicitudes_idEstados_Solicitudes", null, htmlAttributes: new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.Estados_Solicitudes_idEstados_Solicitudes, "", new { @class = "text-danger" })
+            <div class="d-flex justify-content-end">
+                <input type="submit" value="Guardar" class="btn btn-primary" />
+                @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-secondary ms-2" })
+            </div>
         </div>
-    </div>
-
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Save" class="btn btn-default" />
-        </div>
-    </div>
-</div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
+    }
 </div>

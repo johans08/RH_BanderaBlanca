@@ -17,20 +17,69 @@ namespace RH_BanderaBlanca.Controllers
         // GET: permisos_solicitados
         public ActionResult Index()
         {
-            Persona userSesion = new Persona();
-            userSesion = (Persona)Session["user"];
+            var viewModelList = new List<Permiso>();
+            try
+            {
+                Persona userSesion = new Persona();
+                userSesion = (Persona)Session["user"];
 
-            var permisos_solicitados = db.permisos_solicitados.Where(p => p.idEmpleado != userSesion.empleados.idEmpleado).Include(p => p.estados_solicitudes);
-            return View(permisos_solicitados.ToList());
+
+                var permisos_solicitados = db.permisos_solicitados.Where(p => p.idEmpleado != userSesion.empleados.idEmpleado).Include(p => p.estados_solicitudes).ToList();
+
+                foreach (permisos_solicitados permiso in permisos_solicitados)
+                {
+                    empleados empleado = db.empleados.FirstOrDefault(e => e.idEmpleado == permiso.idEmpleado);
+                    personas persona = db.personas.FirstOrDefault(e => e.Identificador == empleado.Personas_Identificador);
+                    if (empleado.idJefaturaDirecta == userSesion.empleados.idEmpleado)
+                    {
+                        var viewModel = new Permiso
+                        {
+                            empleados = empleado,
+                            personas = persona,
+                            permisos_Solicitados = permiso
+                        };
+
+                        viewModelList.Add(viewModel);
+                    }
+                }
+                return View(viewModelList);
+            }
+            catch (Exception)
+            {
+                return View(viewModelList);
+            }
         }
 
         public ActionResult Gestion()
         {
-            Persona userSesion = new Persona();
-            userSesion = (Persona)Session["user"];
+            var viewModelList = new List<Permiso>();
+            try
+            {
+                Persona userSesion = new Persona();
+                userSesion = (Persona)Session["user"];
 
-            var permisos_solicitados = db.permisos_solicitados.Include(p => p.estados_solicitudes).Where(i => i.idEmpleado.Equals(userSesion.empleados.idEmpleado));
-            return View(permisos_solicitados.ToList());
+
+                var permisos_solicitados = db.permisos_solicitados.Include(p => p.estados_solicitudes).Where(i => i.idEmpleado.Equals(userSesion.empleados.idEmpleado)).ToList();
+
+                foreach (permisos_solicitados permiso in permisos_solicitados)
+                {
+                    empleados empleado = db.empleados.FirstOrDefault(e => e.idEmpleado == permiso.idEmpleado);
+                    personas persona = db.personas.FirstOrDefault(e => e.Identificador == empleado.Personas_Identificador);
+                    var viewModel = new Permiso
+                    {
+                        empleados = empleado,
+                        personas = persona,
+                        permisos_Solicitados = permiso
+                    };
+
+                    viewModelList.Add(viewModel);
+                }
+                return View(viewModelList);
+            }
+            catch (Exception)
+            {
+                return View(viewModelList);
+            }
         }
 
         // GET: permisos_solicitados/Details/5
@@ -64,7 +113,7 @@ namespace RH_BanderaBlanca.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Fecha_Permiso,Detalle_Permiso")] permisos_solicitados permisos_solicitados)
+        public ActionResult Create([Bind(Include = "Fecha_Permiso,Detalle_Permiso, Cantidad_Horas")] permisos_solicitados permisos_solicitados)
         {
 
             if (ModelState.IsValid)
@@ -133,7 +182,7 @@ namespace RH_BanderaBlanca.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Fecha_Permiso,idEmpleado,idEstados_Solicitudes,Detalle_Permiso,Fecha_Solicitud,observacion,descontado")] permisos_solicitados permisos_solicitados)
+        public ActionResult Edit([Bind(Include = "Fecha_Permiso,idEmpleado,idEstados_Solicitudes,Detalle_Permiso,Fecha_Solicitud,observacion,descontado, Cantidad_Horas")] permisos_solicitados permisos_solicitados)
         {
             if (ModelState.IsValid)
             {

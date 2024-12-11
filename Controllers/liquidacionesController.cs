@@ -17,6 +17,7 @@ namespace RH_BanderaBlanca.Controllers
         // GET: liquidaciones
         public ActionResult Index()
         {
+
             Persona userSesion = new Persona();
             userSesion = (Persona)Session["user"];
 
